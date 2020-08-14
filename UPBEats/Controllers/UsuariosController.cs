@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +50,7 @@ namespace UPBEats.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
+            ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre");
             return View();
         }
 
@@ -56,14 +59,22 @@ namespace UPBEats.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,Foto,Emprendimiento,DescEmprendimiento")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,FileFoto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
         {
+            
             if (ModelState.IsValid)
             {
+                if(usuario.FileFoto != null)
+                {
+                    var stream = new MemoryStream();
+                    await usuario.FileFoto.CopyToAsync(stream);
+                    usuario.Foto = stream.ToArray();
+                }
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
             return View(usuario);
         }
 
@@ -151,5 +162,6 @@ namespace UPBEats.Controllers
         {
             return _context.Usuario.Any(e => e.Id == id);
         }
+
     }
 }

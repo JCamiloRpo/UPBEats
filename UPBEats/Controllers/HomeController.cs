@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using UPBEats.Data;
 using UPBEats.Models;
 
 namespace UPBEats.Controllers
@@ -12,8 +15,17 @@ namespace UPBEats.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly UPBEatsContext _context;
+        public static bool registro=false;
+
+        public HomeController(UPBEatsContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
+
             return View();
         }
 
@@ -46,6 +58,18 @@ namespace UPBEats.Controllers
         [AllowAnonymous]
         public IActionResult Principal()
         {
+            //Si el usuario tiene la sesion iniciada ingresa a la pagina de inicio
+            if (User.Identity.IsAuthenticated)
+            {
+                //Validar si ya está registrado
+                var usuario = _context.Usuario.FirstOrDefault(m => m.Correo == User.Identity.Name);
+                if (usuario == null)
+                    return Redirect("Usuarios/Create");
+
+                registro = true;
+                return View("Index");
+            }
+            registro = false;
             return View();
         }
     }
