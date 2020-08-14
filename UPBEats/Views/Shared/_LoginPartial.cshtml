@@ -1,6 +1,6 @@
 @using System.Security.Principal
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated && UPBEats.Controllers.HomeController.registro)
 {
     <ul class="nav navbar-nav">
         <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
