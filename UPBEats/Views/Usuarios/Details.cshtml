@@ -1,0 +1,63 @@
+﻿@model UPBEats.Models.Usuario
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Apellido)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apellido)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Correo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Correo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Foto)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Emprendimiento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Emprendimiento)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DescEmprendimiento)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DescEmprendimiento)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>
