@@ -2,19 +2,25 @@
 
 @if (User.Identity.IsAuthenticated && UPBEats.Controllers.HomeController.registro)
 {
-    <ul class="nav navbar-nav">
-        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+    <ul class="navbar-nav my-2 my-lg-0">
+        <li class="nav-item"><a class="nav-link js-scroll-trigger">@User.Identity.Name</a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text">Hello @User.Identity.Name!</li>
-        <li><a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut">Sign out</a></li>
+    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Home</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">About</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contact</a></li>
+        <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
+        <li></li>
     </ul>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="AzureAD" asp-controller="Account" asp-action="SignIn">Ingresar</a></li>
+    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a></li>
+        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contact</a></li>
+        <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignIn" class="nav-link js-scroll-trigger btn btn-primary">Ingresar</a></li>
+        <li></li>
     </ul>
 }
