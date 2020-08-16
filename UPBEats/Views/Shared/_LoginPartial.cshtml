@@ -9,9 +9,17 @@
         <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Home</a></li>
         <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">About</a></li>
         <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contact</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Privacy</a></li>
         <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
         <li></li>
     </ul>
+}
+else if (User.Identity.IsAuthenticated)
+{
+<ul class="navbar-nav ml-auto my-2 my-lg-0">
+    <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignOut" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
+    <li></li>
+</ul>
 }
 else
 {

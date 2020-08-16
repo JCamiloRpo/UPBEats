@@ -32,6 +32,7 @@ namespace UPBEats.Models
         //El nombre del empredimiento/negocio si es vendedor
         public string Emprendimiento { get; set; }
         //La descripción de lo que hace el emprendimiento
+        [Display(Name = "Descripción del emprendimiento")]
         public string DescEmprendimiento { get; set; }
 
         //Llave foranea

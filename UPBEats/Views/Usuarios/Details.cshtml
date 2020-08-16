@@ -1,52 +1,73 @@
 ﻿@model UPBEats.Models.Usuario
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Detalle";
 }
 
-<div>
-    <h4>Usuario</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Correo)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Correo)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd>
-            <img src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="200" alt="" />
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Emprendimiento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Emprendimiento)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DescEmprendimiento)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DescEmprendimiento)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="page-section bg-primary" id="about">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="text-white mt-0">Perfil</h2>
+                <img src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="100" alt="" />
+                <hr class="divider light my-4" />
+            </div>
+            <div class="col-lg-8 text-center">
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.Nombre)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.Nombre)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.Apellido)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.Apellido)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.Correo)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.Correo)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.TipoRolId)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.TipoRolId)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.Emprendimiento)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.Emprendimiento)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 text-center ">
+                        <p class="text-white">@Html.DisplayNameFor(model => model.DescEmprendimiento)</p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50">@Html.DisplayFor(model => model.DescEmprendimiento)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary js-scroll-trigger">Edit</a> |
+                        <a asp-action="Index" class="btn btn-secondary js-scroll-trigger">Back to List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

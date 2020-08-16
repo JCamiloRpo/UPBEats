@@ -10,5 +10,6 @@ namespace UPBEats.Models
         public int Id { get; set; }
         //Será 'Comprador' o 'Vendedor'
         public string Nombre { get; set; }
+
     }
 }
