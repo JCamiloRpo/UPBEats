@@ -43,7 +43,6 @@ namespace UPBEats.Controllers
             {
                 return NotFound();
             }
-
             return View(usuario);
         }
 

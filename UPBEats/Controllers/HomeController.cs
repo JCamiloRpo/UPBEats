@@ -17,6 +17,7 @@ namespace UPBEats.Controllers
     {
         private readonly UPBEatsContext _context;
         public static bool registro=false;
+        public static int idUsuario = -1;
 
         public HomeController(UPBEatsContext context)
         {
@@ -25,7 +26,7 @@ namespace UPBEats.Controllers
 
         public IActionResult Index()
         {
-
+            IdUsuario();
             return View();
         }
 
@@ -66,11 +67,19 @@ namespace UPBEats.Controllers
                 if (usuario == null)
                     return Redirect("Usuarios/Create");
 
+                IdUsuario();
                 registro = true;
                 return View("Index");
             }
             registro = false;
             return View();
+        }
+
+        public void IdUsuario()
+        {
+            var usuario = _context.Usuario.FirstOrDefault(m => m.Correo == User.Identity.Name);
+            if (usuario != null)
+                idUsuario = usuario.Id;
         }
     }
 }
