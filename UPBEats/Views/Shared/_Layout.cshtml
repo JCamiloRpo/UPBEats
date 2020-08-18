@@ -82,6 +82,35 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
+    <script>
+        function btnIngresar() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Ingresar", "Home")",
+                async: true,
+                success: function (msg) {
+                    ServiceSucceeded(msg);
+                },
+                error: function () {
+                    return "error";
+                }
+            });
+        }
+        function btnSalir() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Salir", "Home")",
+                async: true,
+                success: function (msg) {
+                    ServiceSucceeded(msg);
+                },
+                error: function () {
+                    return "error";
+                }
+            });
+        }
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>
