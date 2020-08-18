@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,40 +18,75 @@ namespace UPBEats.Controllers
     public class UsuariosController : Controller
     {
         private readonly UPBEatsContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public UsuariosController(UPBEatsContext context)
+        public UsuariosController(UPBEatsContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Usuario.ToListAsync());
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
+            {
+                return View(await _context.Usuario.ToListAsync());
+            }
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var usuario = await _context.Usuario
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (usuario == null)
-            {
-                return NotFound();
+                var usuario = await _context.Usuario
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                return View(usuario);
             }
-            return View(usuario);
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: Usuarios/Create
         public IActionResult Create()
         {
-            ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre");
-            return View();
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y no esta registrado
+            if (ingreso && !registro)
+            {
+                ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre");
+                return View();
+            }
+            //Si ingresó y ya se ha registrado
+            else if (ingreso)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Principal", "Home");
         }
 
         // POST: Usuarios/Create
@@ -69,10 +105,20 @@ namespace UPBEats.Controllers
                     await usuario.FileFoto.CopyToAsync(stream);
                     usuario.Foto = stream.ToArray();
                 }
+                //Si no se selecciona foto, se pone una por defecto
+                else
+                {
+                    Stream foto = _env.WebRootFileProvider.GetFileInfo("images/user.png").CreateReadStream();
+                    var stream = new MemoryStream();
+                    await foto.CopyToAsync(stream);
+                    usuario.Foto = stream.ToArray();
+                }
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                HomeController.setRegistro(true);
+                return RedirectToAction("Index", "Home");
             }
+
             ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
             return View(usuario);
         }
@@ -80,17 +126,29 @@ namespace UPBEats.Controllers
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
+                var usuario = await _context.Usuario.FindAsync(id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                return View(usuario);
             }
-            return View(usuario);
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return RedirectToAction("Principal", "Home");
+
         }
 
         // POST: Usuarios/Edit/5
@@ -131,19 +189,30 @@ namespace UPBEats.Controllers
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var usuario = await _context.Usuario
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (usuario == null)
+                var usuario = await _context.Usuario
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                return View(usuario);
+            }
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
             {
-                return NotFound();
+                HomeController.setIngreso(false);
             }
-
-            return View(usuario);
+            return RedirectToAction("Principal", "Home");
         }
 
         // POST: Usuarios/Delete/5

@@ -51,7 +51,7 @@
                             </div>
                             <div class="col-md-6 text-center">
                                 <div class="form-group">
-                                    <input asp-for="FileFoto" class="form-control" type="file" accept=".jpg" />
+                                    <input asp-for="FileFoto" class="form-control" type="file" accept=".jpg"/>
                                 </div>
                             </div>
                             <!-- <div class="col-md-6 text-center"> <img id="imgPrevia" src="~/images/user.png" width="150" alt="Vista previa" /><br />  </div> -->
@@ -77,19 +77,19 @@
                             </div>
                             <div class="col-md-6 text-center">
                                 <div class="form-group">
-                                    <select asp-for="TipoRolId" class="form-control" asp-items="ViewBag.TipoRolId"></select>
+                                    <select asp-for="TipoRolId" class="form-control" asp-items="ViewBag.TipoRolId" id="cmbTipoRolId" name="cmbTipoRolId"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4 text-center">
                                 <div class="form-group">
-                                    <label asp-for="Emprendimiento" class="control-label"></label>
+                                    <label asp-for="Emprendimiento" class="control-label" id="lbEmprendimiento" style="display:none"></label>
                                 </div>
                             </div>
                             <div class="col-md-6 text-center">
                                 <div class="form-group">
-                                    <input asp-for="Emprendimiento" class="form-control" />
+                                    <input asp-for="Emprendimiento" class="form-control" id="txtEmprendimiento" style="display:none"/>
                                     <span asp-validation-for="Emprendimiento" class="text-danger"></span>
                                 </div>
                             </div>
@@ -97,12 +97,12 @@
                         <div class="row">
                             <div class="col-md-4 text-center">
                                 <div class="form-group">
-                                    <label asp-for="DescEmprendimiento" class="control-label"></label>
+                                    <label asp-for="DescEmprendimiento" class="control-label" id="lbDescEmprendimiento" style="display:none"></label>
                                 </div>
                             </div>
                             <div class="col-md-6 text-center">
                                 <div class="form-group">
-                                    <textarea asp-for="DescEmprendimiento" class="form-control" rows="2" cols="20"></textarea>
+                                    <textarea asp-for="DescEmprendimiento" class="form-control" rows="2" cols="20" id="txtDescEmprendimiento" style="display:none"></textarea>
                                     <span asp-validation-for="DescEmprendimiento" class="text-danger"></span>
                                 </div>
                             </div>
@@ -124,4 +124,23 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+    <script>
+        $(document).ready(function () {
+            $('#cmbTipoRolId').on('change', function () {
+                var select = $(this).val();
+                if (select == '2') {
+                    $('#lbEmprendimiento').css('display', 'block');
+                    $('#txtEmprendimiento').css('display', 'block');
+                    $('#lbDescEmprendimiento').css('display', 'block');
+                    $('#txtDescEmprendimiento').css('display', 'block');
+                }
+                else {
+                    $('#lbEmprendimiento').css('display', 'none');
+                    $('#txtEmprendimiento').css('display', 'none');
+                    $('#lbDescEmprendimiento').css('display', 'none');
+                    $('#txtDescEmprendimiento').css('display', 'none');
+                }
+            });
+        })
+    </script>
 }
