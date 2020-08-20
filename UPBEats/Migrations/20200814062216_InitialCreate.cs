@@ -42,7 +42,8 @@ namespace UPBEats.Migrations
                         column: x => x.TipoRolId,
                         principalTable: "Rol",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

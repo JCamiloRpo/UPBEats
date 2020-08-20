@@ -39,10 +39,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 text-center ">
-                        <p class="text-white">@Html.DisplayNameFor(model => model.TipoRolId)</p>
+                        <p class="text-white">@Html.DisplayNameFor(model => model.TipoRol)</p>
                     </div>
                     <div class="col-md-6 text-center">
-                        <p class="text-white-50">@Html.DisplayFor(model => model.TipoRolId)</p>
+                        <p class="text-white-50">@Html.DisplayFor(model => model.TipoRol.Nombre)</p>
                     </div>
                 </div>
                 <div class="row">
@@ -63,8 +63,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary js-scroll-trigger">Edit</a> |
-                        <a asp-action="Index" class="btn btn-secondary js-scroll-trigger">Back to List</a>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary js-scroll-trigger">Modificar</a>
                     </div>
                 </div>
             </div>
