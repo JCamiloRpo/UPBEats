@@ -11,5 +11,7 @@ namespace UPBEats.Models
         //Será 'Comprador' o 'Vendedor'
         public string Nombre { get; set; }
 
+        public ICollection<Usuario> Usuarios { get; set; }
+
     }
 }

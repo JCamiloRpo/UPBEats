@@ -33,7 +33,8 @@ namespace UPBEats.Controllers
             //Si el usuario ya ingresó y esta registrado
             if (ingreso && registro)
             {
-                return View(await _context.Usuario.ToListAsync());
+                var uPBEatsContext = _context.Usuario.Include(u => u.TipoRol);
+                return View(await uPBEatsContext.ToListAsync());
             }
             //Si ingresó y no se ha registrado
             else if (ingreso)
@@ -56,6 +57,7 @@ namespace UPBEats.Controllers
                 }
 
                 var usuario = await _context.Usuario
+                    .Include(u => u.TipoRol)
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (usuario == null)
                 {
@@ -140,6 +142,7 @@ namespace UPBEats.Controllers
                 {
                     return NotFound();
                 }
+                ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
                 return View(usuario);
             }
             //Si ingresó y no se ha registrado
@@ -183,6 +186,7 @@ namespace UPBEats.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
             return View(usuario);
         }
 

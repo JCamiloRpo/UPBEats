@@ -10055,6 +10055,7 @@ hr.light {
   color: #470202 !important;
 }
 @media (min-width: 992px) {
+  /* Se comentaran las lineas que ponen la barra del menú trasparente al inicio
   #mainNav {
     box-shadow: none;
     background-color: transparent;
@@ -10064,14 +10065,15 @@ hr.light {
   }
   #mainNav .navbar-brand:hover {
     color: #fff;
-  }
+  } */
   #mainNav .navbar-nav .nav-item .nav-link {
-    color: rgba(255, 255, 255, 0.7);
+    /* color: rgba(255, 255, 255, 0.7); */
     padding: 0 1rem;
   }
+  /*
   #mainNav .navbar-nav .nav-item .nav-link:hover {
     color: #fff;
-  }
+  } */
   #mainNav .navbar-nav .nav-item:last-child .nav-link {
     padding-right: 0;
   }
