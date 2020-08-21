@@ -37,6 +37,10 @@ namespace UPBEats.Models
 
         //Llave foranea
         public Rol TipoRol { get; set; }
+
+        //Relacion uno a muchos
+        public ICollection<Producto> Productos { get; set; }
+
         //Campo para la imagen de perfil
         [NotMapped]
         public IFormFile FileFoto { get; set; }
