@@ -165,7 +165,7 @@ namespace UPBEats.Controllers
             {
                 return NotFound();
             }
-
+            //Agregar TipoRolId y control de la foto FileFoto
             if (ModelState.IsValid)
             {
                 try
