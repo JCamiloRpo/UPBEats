@@ -26,12 +26,12 @@
                                 <hr class="divider my-4" />
                             </div>
                             <div class="col-lg-8 text-center">
-                                <form asp-action="Edit" enctype="multipart/form-data">
+                                <form asp-action="Details" enctype="multipart/form-data">
                                     <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                                     <input type="hidden" asp-for="Id" />
                                     <div class="row">
                                         <div class="col-md-4 text-center ">
-                                            <label class="control-label" asp-for="Nombre" ></label>
+                                            <label class="control-label" asp-for="Nombre"></label>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="form-group">
@@ -56,12 +56,13 @@
                                     <div class="row">
                                         <div class="col-md-4 text-center">
                                             <div class="form-group">
-                                                <label class="control-label" asp-for="Foto" ></label>
+                                                <label class="control-label" asp-for="Foto"></label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="form-group">
                                                 <input class="form-control" asp-for="FileFoto" type="file" accept=".jpg" readonly />
+                                                <input class="form-control" asp-for="Foto" value="@Convert.ToBase64String(Model.Foto)" readonly hidden />
                                             </div>
                                         </div>
                                     </div>
@@ -73,7 +74,7 @@
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="form-group">
-                                                <input class="form-control" asp-for="Correo" value="@User.Identity.Name" readonly/>
+                                                <input class="form-control" asp-for="Correo" value="@User.Identity.Name" readonly />
                                                 <span asp-validation-for="Correo" class="text-danger"></span>
                                             </div>
                                         </div>
@@ -99,8 +100,8 @@
                                             </div>
                                             <div class="col-md-6 text-center">
                                                 <div class="form-group">
-                                                    <input class="form-control" asp-for="Emprendimiento" readonly/>
-                                                    <span class="text-danger" asp-validation-for="Emprendimiento" ></span>
+                                                    <input class="form-control" asp-for="Emprendimiento" readonly />
+                                                    <span class="text-danger" asp-validation-for="Emprendimiento"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,13 +144,14 @@
 </section>
 
 @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         /**
          * Params foto Recibe la entrada a mostrar en la foto
          * Salida N/A
          * Se muestra una vista previa de la foto seleccionada
          */
-        function vistaPrevia(foto) {
+        function VistaPrevia(foto) {
             if (foto.files && foto.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
@@ -165,14 +167,13 @@
                 $('#Nombre').prop('readonly', false);
                 $('#Apellido').prop('readonly', false);
                 $('#FileFoto').prop('readonly', false);
-                $('#Nombre').prop('readonly', false);
                 $('#Emprendimiento').prop('readonly', false);
                 $('#DescEmprendimiento').prop('readonly', false);
                 $('#btnGuardar').prop('hidden', false);
             });
             //Llamar a la funcion cuando se selecciona una foto
             $('#FileFoto').change(function () {
-                vistaPrevia(this);
+                VistaPrevia(this);
             });
         })
 

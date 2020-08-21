@@ -29,47 +29,13 @@ namespace UPBEats.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-            //Si el usuario ya ingresó y esta registrado
-            if (ingreso && registro)
+            if (ControlIngreso())
             {
+                //Codigo independiente de cada metodo
                 var uPBEatsContext = _context.Usuario.Include(u => u.TipoRol);
                 return View(await uPBEatsContext.ToListAsync());
             }
-            //Si ingresó y no se ha registrado
-            else if (ingreso)
-            {
-                HomeController.setIngreso(false);
-            }
-            return RedirectToAction("Principal", "Home");
-        }
-
-        // GET: Usuarios/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-            //Si el usuario ya ingresó y esta registrado
-            if (ingreso && registro)
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var usuario = await _context.Usuario
-                    .Include(u => u.TipoRol)
-                    .FirstOrDefaultAsync(m => m.Id == id);
-                if (usuario == null)
-                {
-                    return NotFound();
-                }
-                return View(usuario);
-            }
-            //Si ingresó y no se ha registrado
-            else if (ingreso)
-            {
-                HomeController.setIngreso(false);
-            }
+            //Retorno a la pagina de inicio
             return RedirectToAction("Principal", "Home");
         }
 
@@ -128,9 +94,7 @@ namespace UPBEats.Controllers
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-            //Si el usuario ya ingresó y esta registrado
-            if (ingreso && registro)
+            if (ControlIngreso())
             {
                 if (id == null)
                 {
@@ -145,29 +109,54 @@ namespace UPBEats.Controllers
                 ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
                 return View(usuario);
             }
-            //Si ingresó y no se ha registrado
-            else if (ingreso)
-            {
-                HomeController.setIngreso(false);
-            }
             return RedirectToAction("Principal", "Home");
-
         }
 
-        // POST: Usuarios/Edit/5
+        // GET: Usuarios/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (ControlIngreso())
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var usuario = await _context.Usuario
+                    .Include(u => u.TipoRol)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                ViewData["Resultado"] = " ";
+                return View(usuario);
+            }
+            return RedirectToAction("Principal", "Home");
+        }
+
+        // POST: Usuarios/Details/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Correo,Foto,Emprendimiento,DescEmprendimiento")] Usuario usuario)
+        public async Task<IActionResult> Details(int id, [Bind("Id,Nombre,Apellido,Correo,Foto,FileFoto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
         {
             if (id != usuario.Id)
             {
                 return NotFound();
             }
-            //Agregar TipoRolId y control de la foto FileFoto
+            
             if (ModelState.IsValid)
             {
+                if (usuario.FileFoto != null)
+                {
+                    var stream = new MemoryStream();
+                    await usuario.FileFoto.CopyToAsync(stream);
+                    usuario.Foto = stream.ToArray();
+                }
+                //Si no se selecciona foto, se deja la que tenia
+
                 try
                 {
                     _context.Update(usuario);
@@ -184,18 +173,15 @@ namespace UPBEats.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Details(id).Result;
             }
-            ViewData["TipoRolId"] = new SelectList(_context.Rol, "Id", "Nombre", usuario.TipoRolId);
-            return View(usuario);
+            return Details(id).Result;
         }
 
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-            //Si el usuario ya ingresó y esta registrado
-            if (ingreso && registro)
+            if (ControlIngreso())
             {
                 if (id == null)
                 {
@@ -203,18 +189,13 @@ namespace UPBEats.Controllers
                 }
 
                 var usuario = await _context.Usuario
+                    .Include(u => u.TipoRol)
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (usuario == null)
                 {
                     return NotFound();
                 }
-
                 return View(usuario);
-            }
-            //Si ingresó y no se ha registrado
-            else if (ingreso)
-            {
-                HomeController.setIngreso(false);
             }
             return RedirectToAction("Principal", "Home");
         }
@@ -235,5 +216,25 @@ namespace UPBEats.Controllers
             return _context.Usuario.Any(e => e.Id == id);
         }
 
+        /**
+         * Params N/A
+         * Salida true si se permite el ingreso
+         * Se controla el ingreso por medio las variables booleanas que especifican si el usuario está en el sisteme y si ya está registrado
+         */
+        private bool ControlIngreso()
+        {
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
+            {
+                return true;
+            }
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return false;
+        }
     }
 }
