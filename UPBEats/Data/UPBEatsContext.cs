@@ -18,5 +18,7 @@ namespace UPBEats.Data
         public DbSet<Rol> Rol { get; set; }
 
         public DbSet<Producto> Producto { get; set; }
+
+        public ICollection<Producto> Productos { get; set; }
     }
 }

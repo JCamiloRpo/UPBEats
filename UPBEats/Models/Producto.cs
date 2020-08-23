@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +24,6 @@ namespace UPBEats.Models
         //[Range(0, 1000000, ErrorMessage = "El precio debe ser positivo")]
         public decimal Precio { get; set; }
         //Por el momento una foto por producto
-        [Required(ErrorMessage = "Debe ingresar una foto caracteristica")]
         public byte[] Foto { get; set; }
         //El vendedor que publica el producto. Llave foranea
         [Required]
@@ -32,6 +32,7 @@ namespace UPBEats.Models
         //Relación con la tabla
         public Usuario Usuario { get; set; }
         //Campo para la imagen
+        [Required(ErrorMessage = "Debe ingresar una foto caracteristica")]
         [NotMapped]
         public IFormFile FileFoto { get; set; }
         //Reglas de validacion
