@@ -20,6 +20,7 @@ namespace UPBEats.Controllers
         private static int idUsuario = -1; //Variable para poder redireccionar al perfil del usuario desde cualquier controlador
         private static bool registro = false; //Variable para saber cuando el usuario esta registrado en la plataforma
         private static bool ingreso = false; //Variable para saber cuando el usuario ingresó en la plataforma
+        private static int usuarioTipoRolId = -1; // Variable para saber el tipo de rol del usuario
         //Accesores de la variable ingreso
         public static bool getIngreso { get => ingreso; }
         public static void setIngreso(bool val)
@@ -37,6 +38,13 @@ namespace UPBEats.Controllers
         public static void setIdUsuario(int val)
         {
             idUsuario = val;
+        }
+
+        //Accesores a la variable tipoRolId
+        public static int getUsuarioTipoRolId { get => usuarioTipoRolId; }
+        public static void setUsuarioTipoRolId(int val)
+        {
+            usuarioTipoRolId = val;
         }
 
         public HomeController(UPBEatsContext context)
@@ -159,6 +167,7 @@ namespace UPBEats.Controllers
             if (usuario != null)
             {
                 setIdUsuario(usuario.Id);
+                setUsuarioTipoRolId(usuario.TipoRolId);
             }
         }
     }
