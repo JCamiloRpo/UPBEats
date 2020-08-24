@@ -79,7 +79,7 @@
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="form-group">
-                                                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId" id="cmbUsuarioId"></select>
+                                                <input asp-for="UsuarioId" class="form-control" value="@UPBEats.Controllers.HomeController.getIdUsuario" />
                                                 <span asp-validation-for="UsuarioId" class="text-danger"></span>
                                             </div>
                                         </div>

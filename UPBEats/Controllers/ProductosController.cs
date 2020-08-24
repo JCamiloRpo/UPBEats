@@ -31,7 +31,9 @@ namespace UPBEats.Controllers
         {
             if (UserIsSeller())
             {
-                var uPBEatsContext = _context.Producto.Include(p => p.Usuario);
+                var uPBEatsContext = _context.Producto
+                    .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos
                 return View(await uPBEatsContext.ToListAsync());
             }
 
@@ -140,19 +142,14 @@ namespace UPBEats.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,FileFoto,UsuarioId")] Producto producto)
         {
-            // Transformamos la foto pasada por el usuario
-            var stream = new MemoryStream();
-            await producto.FileFoto.CopyToAsync(stream);
-            producto.Foto = stream.ToArray();
-
-            // Encontramos el usuario por su Id
-            Usuario user = await _context.Usuario.FindAsync(HomeController.getIdUsuario);
-
-            // Asignamos el Usuario al producto
-            producto.Usuario = user;
 
             if (ModelState.IsValid)
             {
+                // Transformamos la foto pasada por el usuario
+                var stream = new MemoryStream();
+                await producto.FileFoto.CopyToAsync(stream);
+                producto.Foto = stream.ToArray();
+
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

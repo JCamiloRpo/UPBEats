@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using UPBEats.Controllers;
 
 namespace UPBEats.Models
 {
@@ -42,7 +43,9 @@ namespace UPBEats.Models
         {
             if (this.Precio <= 0)
                 yield return new ValidationResult("El precio debe ser positivo");
-            
+
+            if (HomeController.getUsuarioTipoRolId == 2)
+                yield return new ValidationResult("Solo los vendedores pueden publicar productos");
         }
     }
 }
