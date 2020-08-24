@@ -97,6 +97,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
@@ -159,6 +160,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
@@ -186,6 +188,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
