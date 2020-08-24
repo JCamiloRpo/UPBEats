@@ -44,7 +44,7 @@ namespace UPBEats.Models
             if (this.Precio <= 0)
                 yield return new ValidationResult("El precio debe ser positivo");
 
-            if (HomeController.getUsuarioTipoRolId == 2)
+            if (HomeController.getUsuarioTipoRolId != 2)
                 yield return new ValidationResult("Solo los vendedores pueden publicar productos");
         }
     }
