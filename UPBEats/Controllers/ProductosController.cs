@@ -43,6 +43,114 @@ namespace UPBEats.Controllers
             }
         }
 
+        // GET: Productos/Create
+        public IActionResult Create()
+        {
+            if (UserIsSeller())
+            {
+                bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+
+                if (ingreso)
+                {
+                    ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido");
+                    return View(new Producto());
+                }
+
+                else
+                {
+                    return RedirectToAction("Principal", "Home");
+                }
+            }
+
+            else
+            {
+                return RedirectToAction("Principal", "Home");
+            }
+        }
+
+        // POST: Productos/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId")] Producto producto)
+        {
+
+            if (ModelState.IsValid)
+            {
+                //Desde la vista se envia la foto en base 64
+                producto.Foto = producto.Foto.ToArray<byte>();
+
+                _context.Add(producto);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            //ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
+            return View(producto);
+        }
+
+        // GET: Productos/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (UserIsSeller())
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var producto = await _context.Producto
+                    .Include(p => p.Usuario)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (producto == null)
+                {
+                    return NotFound();
+                }
+                return View(producto);
+            }
+
+            else
+            {
+                return RedirectToAction("Principal", "Home");
+            }
+        }
+
+        // POST: Productos/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId")] Producto producto)
+        {
+            if (id != producto.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(producto);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductoExists(producto.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
+            return View(producto);
+        }
+
         // GET: Productos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -108,115 +216,6 @@ namespace UPBEats.Controllers
                 return Details(id).Result;
             }
             return Details(id).Result;
-        }
-
-        // GET: Productos/Create
-        public IActionResult Create()
-        {
-            if (UserIsSeller())
-            {
-                bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-
-                if (ingreso)
-                {
-                    ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido");
-                    return View(new Producto());
-                }
-
-                else
-                {
-                    return RedirectToAction("Principal", "Home");
-                }
-            }
-
-            else
-            {
-                return RedirectToAction("Principal", "Home");
-            }
-        }
-
-        // POST: Productos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,FileFoto,UsuarioId")] Producto producto)
-        {
-
-            if (ModelState.IsValid)
-            {
-                // Transformamos la foto pasada por el usuario
-                var stream = new MemoryStream();
-                await producto.FileFoto.CopyToAsync(stream);
-                producto.Foto = stream.ToArray();
-
-                _context.Add(producto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            //ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
-            return View(producto);
-        }
-
-        // GET: Productos/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (UserIsSeller())
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var producto = await _context.Producto.FindAsync(id);
-                if (producto == null)
-                {
-                    return NotFound();
-                }
-                ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
-                return View(producto);
-            }
-
-            else
-            {
-                return RedirectToAction("Principal", "Home");
-            }
-        }
-
-        // POST: Productos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId")] Producto producto)
-        {
-            if (id != producto.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(producto);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductoExists(producto.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
-            return View(producto);
         }
 
         // GET: Productos/Delete/5

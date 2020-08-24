@@ -16,6 +16,7 @@
                     <div class="card-body">
                         <form asp-action="Create" enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="UsuarioId" value="@UPBEats.Controllers.HomeController.getIdUsuario" type="hidden" />
                             <div class="row">
                                 <!--Campos a la derecha-->
                                 <div class="col-lg-8">
@@ -67,20 +68,8 @@
                                         <div class="col-md-6 text-center">
                                             <div class="form-group">
                                                 <input asp-for="FileFoto" class="form-control" type="file" accept=".jpg" />
-                                                <span asp-validation-for="FileFoto" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="display: none">
-                                        <div class="col-md-4 text-center">
-                                            <div class="form-group">
-                                                <label asp-for="UsuarioId" class="control-label" id="UsuarioId"></label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="form-group">
-                                                <input asp-for="UsuarioId" class="form-control" value="@UPBEats.Controllers.HomeController.getIdUsuario" />
-                                                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                                                <input asp-for="Foto" type="hidden" />
+                                                <span asp-validation-for="Foto" class="text-danger"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -95,7 +84,12 @@
                                 <div class="col-md-12 text-center">
                                     <div class="form-group">
                                         <br />
-                                        <input type="submit" value="Registrar" class="btn btn-primary" />
+                                        <button class="btn btn-primary btn-icon-split" type="submit">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Publicar</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -120,6 +114,8 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $('#imgFoto').attr('src', e.target.result);
+                    var data = e.target.result.split('base64,')[1];
+                    $('#Foto').attr('value', data);
                 }
                 reader.readAsDataURL(foto.files[0]);
             }

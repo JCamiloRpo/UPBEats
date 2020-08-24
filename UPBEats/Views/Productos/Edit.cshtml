@@ -1,60 +1,144 @@
 ﻿@model UPBEats.Models.Producto
 
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Modificar productos";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
+<section class="page-section" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Basic Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Modificar producto</h6>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" enctype="multipart/form-data">
+                            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="UsuarioId" />
+                            <div class="row">
+                                <!--Campos a la derecha-->
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label asp-for="Nombre" class="control-label"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input asp-for="Nombre" class="form-control" />
+                                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label asp-for="Descripcion" class="control-label"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input asp-for="Descripcion" class="form-control" />
+                                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label asp-for="Precio" class="control-label"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input asp-for="Precio" class="form-control" />
+                                                <span asp-validation-for="Precio" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label asp-for="Foto" class="control-label"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input asp-for="FileFoto" class="form-control" type="file" accept=".jpg" />
+                                                <input class="form-control" asp-for="Foto" value="@Convert.ToBase64String(Model.Foto)" type="hidden" />
+                                                <span asp-validation-for="Foto" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Foto a la izquierda-->
+                                <div class="col-lg-4 text-center justify-content-center">
+                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="200" height="200" alt="Producto" />
+                                    <hr class="divider my-4" />
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-12 text-center">
+                                    <div class="form-group">
+                                        <br />
+                                        <button class="btn btn-primary btn-icon-split" id="btnGuardar" type="submit">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Guardar</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-<h4>Producto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</section>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        /**
+         * Params foto Recibe la entrada a mostrar en la foto
+         * Salida N/A
+         * Se muestra una vista previa de la foto seleccionada
+         */
+        function VistaPrevia(foto) {
+            if (foto.files && foto.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgFoto').attr('src', e.target.result);
+                    var data = e.target.result.split('base64,')[1];
+                    $('#Foto').attr('value', data);
+                }
+                reader.readAsDataURL(foto.files[0]);
+            }
+        }
 
-</body>
-</html>
+        $(document).ready(function () {
+            //Habilitar campos y mostrar boton guardar cuando se decide modificar
+            $('#btnModificar').on('click', function () {
+                $('#Nombre').prop('readonly', false);
+                $('#Descripcion').prop('readonly', false);
+                $('#Precio').prop('readonly', false);
+                $('#FileFoto').prop('readonly', false);
+                $('#btnGuardar').prop('hidden', false);
+            });
+            //Llamar a la funcion cuando se selecciona una foto
+            $('#FileFoto').change(function () {
+                VistaPrevia(this);
+            });
+        })
+
+    </script>
+}
