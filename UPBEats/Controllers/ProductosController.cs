@@ -78,14 +78,10 @@ namespace UPBEats.Controllers
 
             if (ModelState.IsValid)
             {
-                //Desde la vista se envia la foto en base 64
-                producto.Foto = producto.Foto.ToArray<byte>();
-
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido", producto.UsuarioId);
             return View(producto);
         }
 
@@ -101,6 +97,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
@@ -163,6 +160,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
@@ -178,46 +176,6 @@ namespace UPBEats.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Details(int id, [Bind("Id,Nombre,Descripcion,Precio,FileFoto,UsuarioId")] Producto producto)
-        {
-            if (id != producto.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                if (producto.FileFoto != null)
-                {
-                    var stream = new MemoryStream();
-                    await producto.FileFoto.CopyToAsync(stream);
-                    producto.Foto = stream.ToArray();
-                }
-                //Si no se selecciona foto, se deja la que tenia
-
-                try
-                {
-                    _context.Update(producto);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductoExists(producto.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return Details(id).Result;
-            }
-            return Details(id).Result;
-        }
-
         // GET: Productos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -230,6 +188,7 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
+                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
