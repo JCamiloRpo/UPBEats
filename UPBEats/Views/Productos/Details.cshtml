@@ -13,85 +13,37 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Detalles del producto</h6>
-                        <div class="dropdown no-arrow">
-                            <a class="btn btn-secondary btn-circle" id="btnModificar" href="#">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-lg-8 text-center">
-                                <img class="rounded-circle" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="100" height="100" alt="" />
+                                <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="200" height="200" alt="" />
                                 <hr class="divider my-4" />
                             </div>
                             <div class="col-lg-8 text-center">
                                 <form asp-action="Details" enctype="multipart/form-data">
-                                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-                                    <input type="hidden" asp-for="Id" />
-                                    <input type="hidden" asp-for="UsuarioId" />
-                                    <input type="hidden" asp-for="Usuario" />
                                     <div class="row">
                                         <div class="col-md-4 text-center ">
-                                            <label class="control-label" asp-for="Nombre"></label>
+                                            <h5>@Html.DisplayNameFor(model => model.Nombre)</h5>
                                         </div>
                                         <div class="col-md-6 text-center">
-                                            <div class="form-group">
-                                                <input class="form-control" asp-for="Nombre" readonly />
-                                                <span class="text-danger" asp-validation-for="Nombre"></span>
-                                            </div>
+                                            <p>@Html.DisplayFor(model => model.Nombre)</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 text-center">
-                                            <div class="form-group">
-                                                <label class="control-label" asp-for="Descripcion"></label>
-                                            </div>
+                                            <h5>@Html.DisplayNameFor(model => model.Descripcion)</h5>
                                         </div>
                                         <div class="col-md-6 text-center">
-                                            <div class="form-group">
-                                                <input class="form-control" asp-for="Descripcion" readonly />
-                                                <span class="text-danger" asp-validation-for="Descripcion"></span>
-                                            </div>
+                                            <p>@Html.DisplayFor(model => model.Descripcion)</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 text-center">
-                                            <div class="form-group">
-                                                <label class="control-label" asp-for="Precio"></label>
-                                            </div>
+                                            <h5>@Html.DisplayNameFor(model => model.Precio)</h5>
                                         </div>
                                         <div class="col-md-6 text-center">
-                                            <div class="form-group">
-                                                <input class="form-control" asp-for="Precio" readonly />
-                                                <span class="text-danger" asp-validation-for="Precio"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 text-center">
-                                            <div class="form-group">
-                                                <label class="control-label" asp-for="Foto"></label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="form-group">
-                                                <input class="form-control" asp-for="FileFoto" type="file" accept=".jpg" readonly />
-                                                <input class="form-control" asp-for="Foto" value="@Convert.ToBase64String(Model.Foto)" readonly hidden />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <div class="form-group">
-                                                <br />
-                                                <button class="btn btn-primary btn-icon-split" id="btnGuardar" type="submit" hidden>
-                                                    <span class="icon text-white-50">
-                                                        <i class="fas fa-check"></i>
-                                                    </span>
-                                                    <span class="text">Guardar</span>
-                                                </button>
-                                            </div>
+                                            <p>@Html.DisplayFor(model => model.Precio)</p>
                                         </div>
                                     </div>
                                 </form>
@@ -104,39 +56,3 @@
         </div>
     </div>
 </section>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        /**
-         * Params foto Recibe la entrada a mostrar en la foto
-         * Salida N/A
-         * Se muestra una vista previa de la foto seleccionada
-         */
-        function VistaPrevia(foto) {
-            if (foto.files && foto.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#imgFoto').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(foto.files[0]);
-            }
-        }
-
-        $(document).ready(function () {
-            //Habilitar campos y mostrar boton guardar cuando se decide modificar
-            $('#btnModificar').on('click', function () {
-                $('#Nombre').prop('readonly', false);
-                $('#Descripcion').prop('readonly', false);
-                $('#Precio').prop('readonly', false);
-                $('#FileFoto').prop('readonly', false);
-                $('#btnGuardar').prop('hidden', false);
-            });
-            //Llamar a la funcion cuando se selecciona una foto
-            $('#FileFoto').change(function () {
-                VistaPrevia(this);
-            });
-        })
-
-    </script>
-}
