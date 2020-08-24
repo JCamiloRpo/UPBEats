@@ -109,7 +109,7 @@ namespace UPBEats.Controllers
         }
 
         // GET: Productos/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             if (UserIsSeller())
             {
