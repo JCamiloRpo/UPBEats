@@ -31,13 +31,19 @@ namespace UPBEats.Models
         [Required]
         public int UsuarioId { get; set; }
 
+        //Activar y desactivar la disponibilidad del producto
+        public bool Disponible { get; set; }
+
         //Relación con la tabla
         public Usuario Usuario { get; set; }
         //Campo para la imagen
         [NotMapped]
         public IFormFile FileFoto { get; set; }
+
+        //Relacion uno a muchos
+        public ICollection<ProductoFavorito> ProductoFavoritos { get; set; }
+
         //Reglas de validacion
-        
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

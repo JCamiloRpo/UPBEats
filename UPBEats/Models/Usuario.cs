@@ -40,6 +40,7 @@ namespace UPBEats.Models
 
         //Relacion uno a muchos
         public ICollection<Producto> Productos { get; set; }
+        public ICollection<ProductoFavorito> ProductoFavoritos { get; set; }
 
         //Campo para la imagen de perfil
         [NotMapped]

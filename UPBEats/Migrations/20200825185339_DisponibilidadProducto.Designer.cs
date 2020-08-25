@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UPBEats.Data;
 
 namespace UPBEats.Migrations
 {
     [DbContext(typeof(UPBEatsContext))]
-    partial class UPBEatsContextModelSnapshot : ModelSnapshot
+    [Migration("20200825185339_DisponibilidadProducto")]
+    partial class DisponibilidadProducto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,28 +54,6 @@ namespace UPBEats.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Producto");
-                });
-
-            modelBuilder.Entity("UPBEats.Models.ProductoFavorito", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("ProductoFavorito");
                 });
 
             modelBuilder.Entity("UPBEats.Models.Rol", b =>
@@ -133,21 +113,6 @@ namespace UPBEats.Migrations
                 {
                     b.HasOne("UPBEats.Models.Usuario", "Usuario")
                         .WithMany("Productos")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UPBEats.Models.ProductoFavorito", b =>
-                {
-                    b.HasOne("UPBEats.Models.Producto", "Producto")
-                        .WithMany("ProductoFavoritos")
-                        .HasForeignKey("ProductoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UPBEats.Models.Usuario", "Usuario")
-                        .WithMany("ProductoFavoritos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
