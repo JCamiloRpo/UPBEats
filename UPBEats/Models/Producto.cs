@@ -36,8 +36,11 @@ namespace UPBEats.Models
         //Campo para la imagen
         [NotMapped]
         public IFormFile FileFoto { get; set; }
-        //Reglas de validacion
         
+        //Activar y desactivar la disponibilidad del producto
+        public bool Disponible { get; set; }
+
+        //Reglas de validacion
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
