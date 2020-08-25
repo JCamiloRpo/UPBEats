@@ -16,8 +16,10 @@ namespace UPBEats.Data
         //Se agregan todos los modelos
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Rol> Rol { get; set; }
-
         public DbSet<Producto> Producto { get; set; }
+
+        public DbSet<ProductoFavorito> ProductoFavorito { get; set; }
+
 
     }
 }
