@@ -13,40 +13,65 @@
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Detalles del producto</h6>
+                        <div class="dropdown no-arrow">
+                            @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
+                            {
+                                <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@Model.Id">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            else//Opciones para el comprador
+                            {
+                                <form asp-controller="ProductoFavoritos" asp-action="Favorito" >
+                                    <input type="hidden" value="@Model.Id" name="ProductoId" />
+                                    <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                    <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
+                                        @if (Convert.ToBoolean(ViewData["Favorito"]))
+                                        {
+                                            <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
+                                        }
+                                    </button>
+                                </form>
+                            }
+                        </div>
                     </div>
                     <div class="card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-lg-8 text-center">
-                                <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="200" height="200" alt="" />
-                                <hr class="divider my-4" />
+                        <div class="row">
+                            <!--Campos a la derecha-->
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-md-4 text-center ">
+                                        <h5>@Html.DisplayNameFor(model => model.Nombre)</h5>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <p>@Html.DisplayFor(model => model.Nombre)</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <h5>@Html.DisplayNameFor(model => model.Descripcion)</h5>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <p>@Html.DisplayFor(model => model.Descripcion)</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <h5>@Html.DisplayNameFor(model => model.Precio)</h5>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <p>@Html.DisplayFor(model => model.Precio)</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-lg-8 text-center">
-                                <form asp-action="Details" enctype="multipart/form-data">
-                                    <div class="row">
-                                        <div class="col-md-4 text-center ">
-                                            <h5>@Html.DisplayNameFor(model => model.Nombre)</h5>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <p>@Html.DisplayFor(model => model.Nombre)</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 text-center">
-                                            <h5>@Html.DisplayNameFor(model => model.Descripcion)</h5>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <p>@Html.DisplayFor(model => model.Descripcion)</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 text-center">
-                                            <h5>@Html.DisplayNameFor(model => model.Precio)</h5>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <p>@Html.DisplayFor(model => model.Precio)</p>
-                                        </div>
-                                    </div>
-                                </form>
+                            <!--Foto a la izquierda-->
+                            <div class="col-lg-4 text-center justify-content-center">
+                                <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Foto)" width="200" height="200" alt="Producto" />
+                                <hr class="divider my-4" />
                             </div>
                         </div>
                     </div>
@@ -56,3 +81,8 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

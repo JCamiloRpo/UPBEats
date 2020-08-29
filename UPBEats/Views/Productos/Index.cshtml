@@ -4,11 +4,11 @@
     ViewData["Title"] = "Inicio";
 }
 
-<section class="page-section bg-primary" id="about">
+<section class="page-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12 text-center ">
-                <table class="table text-white">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>
@@ -43,12 +43,26 @@
                                     <img src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="50" alt="" />
                                 </td>
                                 <td>
-                                    <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
-                                        <i class="fas fa-edit"></i>
-                                    </a> |
-                                    <a class="btn btn-secondary btn-circle" asp-action="Delete" asp-route-id="@item.Id">
-                                        <i class="fas fa-trash"></i>
-                                    </a> |
+                                    @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
+                                    {
+                                        <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="fas fa-edit"></i>
+                                        </a><p>|</p>
+                                        <a class="btn btn-secondary btn-circle" asp-action="Delete" asp-route-id="@item.Id">
+                                            <i class="fas fa-trash"></i>
+                                        </a><p>|</p>
+                                    }
+                                    else
+                                    {
+                                        @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(item.Id, UPBEats.Controllers.HomeController.getIdUsuario))
+                                        {
+                                            <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
+                                        }
+                                    }
                                     <a class="btn btn-secondary btn-circle" asp-action="Details" asp-route-id="@item.Id">
                                         <i class="fas fa-info"></i>
                                     </a>
