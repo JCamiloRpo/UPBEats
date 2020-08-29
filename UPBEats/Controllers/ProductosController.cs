@@ -30,52 +30,47 @@ namespace UPBEats.Controllers
         // GET: Productos
         public async Task<IActionResult> Index()
         {
-            if (UserIsSeller())
+            if (ControlIngreso())
             {
-                var uPBEatsContext = _context.Producto
-                    .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos publicados
-                return View(await uPBEatsContext.ToListAsync());
+                if (UserIsSeller())//Si es vendedor
+                {
+                    var uPBEatsContext = _context.Producto
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos publicados
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
+                else //Si es comprador
+                {
+                    var uPBEatsContext = _context.Producto
+                        .Include(p => p.Usuario);
+
+                    //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
+                    productoFavoritos = _context.ProductoFavorito
+                        .Include(p => p.Producto)
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
             }
-
-            else
-            {
-                var uPBEatsContext = _context.Producto
-                    .Include(p => p.Usuario);
-
-                //Lista de productos favoritos del usuario para mostrar en la vista
-                productoFavoritos = _context.ProductoFavorito
-                    .Include(p => p.Producto)
-                    .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
-
-                return View(await uPBEatsContext.ToListAsync());
-            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: Productos/Create
         public IActionResult Create()
         {
-            if (UserIsSeller())
+            if (ControlIngreso())
             {
-                bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
-
-                if (ingreso)
+                if (UserIsSeller())
                 {
                     ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido");
                     return View(new Producto());
                 }
-
-                else
-                {
-                    return RedirectToAction("Principal", "Home");
-                }
             }
-
-            else
-            {
-                return RedirectToAction("Principal", "Home");
-            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
         }
 
         // POST: Productos/Create
@@ -98,28 +93,28 @@ namespace UPBEats.Controllers
         // GET: Productos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (UserIsSeller())
+            if (ControlIngreso())
             {
-                if (id == null)
+                if (UserIsSeller())
                 {
-                    return NotFound();
-                }
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-                var producto = await _context.Producto
-                    .Include(p => p.Usuario)
-                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
-                    .FirstOrDefaultAsync(m => m.Id == id);
-                if (producto == null)
-                {
-                    return NotFound();
+                    var producto = await _context.Producto
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
+                        .FirstOrDefaultAsync(m => m.Id == id);
+                    if (producto == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(producto);
                 }
-                return View(producto);
             }
-
-            else
-            {
-                return RedirectToAction("Principal", "Home");
-            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
         }
 
         // POST: Productos/Edit/5
@@ -161,26 +156,7 @@ namespace UPBEats.Controllers
         // GET: Productos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var producto = await _context.Producto
-                .Include(p => p.Usuario)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-            ViewData["Favorito"] = ProductoFavoritoExists(Convert.ToInt32(id), HomeController.getIdUsuario);
-            return View(producto);
-        }
-
-        // GET: Productos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (UserIsSeller())
+            if (ControlIngreso())
             {
                 if (id == null)
                 {
@@ -189,20 +165,44 @@ namespace UPBEats.Controllers
 
                 var producto = await _context.Producto
                     .Include(p => p.Usuario)
-                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (producto == null)
                 {
                     return NotFound();
                 }
-
+                ViewData["Favorito"] = ProductoFavoritoExists(Convert.ToInt32(id), HomeController.getIdUsuario);
                 return View(producto);
             }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
+        }
 
-            else
+        // GET: Productos/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (ControlIngreso())
             {
-                return RedirectToAction("Principal", "Home");
-            }    
+                if (UserIsSeller())
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var producto = await _context.Producto
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
+                        .FirstOrDefaultAsync(m => m.Id == id);
+                    if (producto == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(producto);
+                }
+            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");  
         }
 
         // POST: Productos/Delete/5
@@ -243,19 +243,28 @@ namespace UPBEats.Controllers
 
         private bool UserIsSeller()
         {
-            Usuario usuario = _context.Usuario.Find(HomeController.getIdUsuario);
-            if (User.Identity.IsAuthenticated && usuario != null)
-            {
-                if (usuario.TipoRolId == 2)
-                    return true;
-                else
-                    return false;
-            }
+            return HomeController.getUsuarioTipoRolId == 2;
+        }
 
-            else
+        /**
+         * Params N/A
+         * Salida true si se permite el ingreso
+         * Se controla el ingreso por medio las variables booleanas que especifican si el usuario está en el sisteme y si ya está registrado
+         */
+        private bool ControlIngreso()
+        {
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
             {
-                return false;
+                return true;
             }
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return false;
         }
     }
 }
