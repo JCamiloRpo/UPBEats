@@ -19,6 +19,7 @@ namespace UPBEats.Controllers
     {
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
+        public static List<ProductoFavorito> productoFavoritos;
 
         public ProductosController(UPBEatsContext context, IWebHostEnvironment env)
         {
@@ -33,13 +34,21 @@ namespace UPBEats.Controllers
             {
                 var uPBEatsContext = _context.Producto
                     .Include(p => p.Usuario)
-                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos
+                    .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos
                 return View(await uPBEatsContext.ToListAsync());
             }
 
             else
             {
-                return RedirectToAction("Principal", "Home");
+                var uPBEatsContext = _context.Producto
+                    .Include(p => p.Usuario);
+
+                productoFavoritos = _context.ProductoFavorito
+                    .Include(p => p.Producto)
+                    .Include(p => p.Usuario)
+                    .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos;
+
+                return View(await uPBEatsContext.ToListAsync());
             }
         }
 
@@ -151,29 +160,20 @@ namespace UPBEats.Controllers
         // GET: Productos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (UserIsSeller())
+            if (id == null)
             {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var producto = await _context.Producto
-                    .Include(p => p.Usuario)
-                    .Where<Producto>(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
-                    .FirstOrDefaultAsync(m => m.Id == id);
-                if (producto == null)
-                {
-                    return NotFound();
-                }
-
-                return View(producto);
+                return NotFound();
             }
 
-            else
+            var producto = await _context.Producto
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (producto == null)
             {
-                return RedirectToAction("Principal", "Home");
+                return NotFound();
             }
+            ViewData["Favorito"] = ProductoFavoritoExists(Convert.ToInt32(id), HomeController.getIdUsuario);
+            return View(producto);
         }
 
         // GET: Productos/Delete/5
@@ -218,6 +218,16 @@ namespace UPBEats.Controllers
         private bool ProductoExists(int id)
         {
             return _context.Producto.Any(e => e.Id == id);
+        }
+
+        private bool ProductoFavoritoExists(int productoId, int usuarioId)
+        {
+            return _context.ProductoFavorito.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
+        }
+
+        public static bool IsProductoFavorito(int productoId, int usuarioId)
+        {
+            return productoFavoritos.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
         }
 
         private bool UserIsSeller()
