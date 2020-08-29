@@ -34,7 +34,7 @@ namespace UPBEats.Controllers
             {
                 var uPBEatsContext = _context.Producto
                     .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos
+                    .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos publicados
                 return View(await uPBEatsContext.ToListAsync());
             }
 
@@ -43,10 +43,11 @@ namespace UPBEats.Controllers
                 var uPBEatsContext = _context.Producto
                     .Include(p => p.Usuario);
 
+                //Lista de productos favoritos del usuario para mostrar en la vista
                 productoFavoritos = _context.ProductoFavorito
                     .Include(p => p.Producto)
                     .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos;
+                    .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
 
                 return View(await uPBEatsContext.ToListAsync());
             }
@@ -220,11 +221,21 @@ namespace UPBEats.Controllers
             return _context.Producto.Any(e => e.Id == id);
         }
 
+        /**
+         * Params productoId, usuarioId
+         * Return N/A
+         * Se realiza la consulta de que si el usuario tiene ese producto en favoritos utilizado en Deteails
+         */
         private bool ProductoFavoritoExists(int productoId, int usuarioId)
         {
             return _context.ProductoFavorito.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
         }
 
+        /**
+         * Params productoId, usuarioId
+         * Return N/A
+         * Se realiza la consulta de que si el usuario tiene ese producto en favoritos utilizado en Index desde el html
+         */
         public static bool IsProductoFavorito(int productoId, int usuarioId)
         {
             return productoFavoritos.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
