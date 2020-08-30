@@ -78,7 +78,7 @@ namespace UPBEats.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId")] Producto producto)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId,Disponible")] Producto producto)
         {
 
             if (ModelState.IsValid)
@@ -122,7 +122,7 @@ namespace UPBEats.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId")] Producto producto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId,Disponible")] Producto producto)
         {
             if (id != producto.Id)
             {
