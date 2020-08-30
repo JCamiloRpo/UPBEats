@@ -32,7 +32,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (UserIsSeller())//Si es vendedor
+                if (HomeController.getUsuarioTipoRolId == 2)//Si es vendedor
                 {
                     var uPBEatsContext = _context.Producto
                         .Include(p => p.Usuario)
@@ -63,7 +63,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (UserIsSeller())
+                if (HomeController.getUsuarioTipoRolId == 2)
                 {
                     ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido");
                     return View(new Producto());
@@ -95,7 +95,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (UserIsSeller())
+                if (HomeController.getUsuarioTipoRolId == 2)
                 {
                     if (id == null)
                     {
@@ -182,7 +182,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (UserIsSeller())
+                if (HomeController.getUsuarioTipoRolId == 2)
                 {
                     if (id == null)
                     {
@@ -239,11 +239,6 @@ namespace UPBEats.Controllers
         public static bool IsProductoFavorito(int productoId, int usuarioId)
         {
             return productoFavoritos.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
-        }
-
-        private bool UserIsSeller()
-        {
-            return HomeController.getUsuarioTipoRolId == 2;
         }
 
         /**

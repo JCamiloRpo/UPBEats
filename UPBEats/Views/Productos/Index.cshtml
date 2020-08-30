@@ -29,7 +29,7 @@
                                             <input type="hidden" value="@item.Id" name="ProductoId" />
                                             <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
                                             <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
-                                                @if (Convert.ToBoolean(ViewData["Favorito"]))
+                                                @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(item.Id, @UPBEats.Controllers.HomeController.getIdUsuario))
                                                 {
                                                     <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
                                                 }
