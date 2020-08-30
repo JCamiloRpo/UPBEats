@@ -190,7 +190,7 @@ namespace UPBEats.Controllers
             var productoFavorito = await _context.ProductoFavorito.FindAsync(id);
             _context.ProductoFavorito.Remove(productoFavorito);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Productos");
+            return RedirectToAction("Index", "ProductoFavoritos");
         }
 
         /**
