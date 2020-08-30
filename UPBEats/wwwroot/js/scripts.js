@@ -61,3 +61,8 @@
   });
 
 })(jQuery); // End of use strict
+//Switch slide bar start
+$('#myCarousel').carousel({
+    interval: 3000,
+})
+//ends

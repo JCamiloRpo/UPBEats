@@ -4,27 +4,31 @@
 {
     @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2) //Menu para el usuario que es vendedor
     {
-        <ul class="navbar-nav ml-auto my-2 my-lg-0">
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Home</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">About</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contact</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Privacy</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Create" class="nav-link js-scroll-trigger">Vender</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
-            <li></li>
-        </ul>
+    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Inicio</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">Nosotros</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contacto</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Terminos</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Usuarios" asp-action="Details" asp-route-id="@UPBEats.Controllers.HomeController.getIdUsuario" class="nav-link js-scroll-trigger">Perfil</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Index" class="nav-link js-scroll-trigger">Productos</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Create" class="nav-link js-scroll-trigger">Vender</a></li>
+        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
+        <li></li>
+    </ul>
     }
 
     else //Menu para el usuario que es comprador
     {
-        <ul class="navbar-nav ml-auto my-2 my-lg-0">
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Home</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">About</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contact</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Privacy</a></li>
-            <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
-            <li></li>
-        </ul>
+<ul class="navbar-nav ml-auto my-2 my-lg-0">
+    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Inicio</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">Nosotros</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contacto</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Terminos</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Usuarios" asp-action="Details" asp-route-id="@UPBEats.Controllers.HomeController.getIdUsuario" class="btn btn-primary btn-xl">Perfil</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-xl">Productos</a></li>
+    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
+    <li></li>
+</ul>
     }
 
 }
