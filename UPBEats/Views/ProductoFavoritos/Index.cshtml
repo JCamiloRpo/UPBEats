@@ -1,41 +1,23 @@
 ﻿@model IEnumerable<UPBEats.Models.ProductoFavorito>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Productos favoritos";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
+<section class="page-section">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-
-
-
-                @foreach (var item in Model)
-                {
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Producto.Nombre)</h6>
+                            <a class="m-0 font-weight-bold text-primary" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Producto.Nombre)</a>
                             <div class="dropdown no-arrow">
-                                <form asp-controller="ProductoFavoritos" asp-action="Favorito">
-                                    <input type="hidden" value="@item.Id" name="ProductoId" />
-                                    <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                <form asp-action="Delete">
+                                    <input type="hidden" name="Id" value="@item.Id" />
                                     <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
-                                        @if (Convert.ToBoolean(ViewData["Favorito"]))
-                                        {
-                                            <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
-                                        }
-                                        else
-                                        {
-                                            <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
-                                        }
+                                        <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
                                     </button>
                                 </form>
                             </div>
@@ -45,41 +27,48 @@
                                 <!--Campos a la derecha-->
                                 <div class="col-lg-8">
                                     <div class="row">
-                                        <div class="col-md-4 text-center">
-                                            <h5>@Html.DisplayNameFor(modeItem => item.Producto.Descripcion)</h5>
-                                        </div>
-                                        <div class="col-md-6 text-center">
+                                        <div class="col-md-12 text-center">
                                             <p>@Html.DisplayFor(modeItem => item.Producto.Descripcion)</p>
+                                            <hr class="divider my-3" />
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4 text-center">
-                                            <h5>@Html.DisplayNameFor(modeItem => item.Producto.Precio)</h5>
+                                            <h6>@Html.DisplayNameFor(modeItem => item.Producto.Precio)</h6>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <p>@Html.DisplayFor(modeItem => item.Producto.Precio)</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 text-center">
-                                            <h5>@Html.DisplayNameFor(modeItem => item.Usuario.Emprendimiento)</h5>
-                                        </div>
-                                        <div class="col-md-6 text-center">
-                                            <p>@Html.DisplayFor(modeItem => item.Usuario.DescEmprendimiento)</p>
+                                            <br />
                                         </div>
                                     </div>
                                 </div>
                                 <!--Foto a la DErecha-->
                                 <div class="col-lg-4 text-center justify-content-center">
-                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Producto.Foto)" width="200" height="200" alt="Producto" />
-                                    <hr class="divider my-4" />
+                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Producto.Foto)" width="100" height="100" alt="Producto" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center text-muted">
+                                    @if (item.Producto.Disponible)
+                                    {
+                                        <p>
+                                            Disponible
+                                            <i class="fas fa-smile text-muted"></i>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            Agotado
+                                            <i class="fas fa-frown text-muted"></i>
+                                        </p>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
-</body>
-</html>
+</section>
