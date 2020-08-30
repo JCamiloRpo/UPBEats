@@ -9,25 +9,24 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <!-- Basic Card Example -->
-                <div class="card shadow mb-4">
-                    
-                    <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Modificar producto</h6>
-                        <div>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="UsuarioId" />
+                    <!-- Basic Card Example -->
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Modificar producto</h6>
+                            <div>
+                                <label class="switch">
+                                    <input type="checkbox" asp-for="Disponible">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="card-body">
-                        <form asp-action="Edit" enctype="multipart/form-data">
-                            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-                            <input type="hidden" asp-for="Id" />
-                            <input type="hidden" asp-for="UsuarioId" />
+                        <div class="card-body">
                             <div class="row">
                                 <!--Campos a la derecha-->
                                 <div class="col-lg-8">
@@ -104,9 +103,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
 
         </div>
