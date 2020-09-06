@@ -53,17 +53,17 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)//Si es vendedor
-                {
-                    // TODO
-                }
-                else //Si es comprador
+                if (HomeController.getUsuarioTipoRolId == 1) //Si es comprador
                 {
                     var uPBEatsContext = _context.Usuario
                         .Include(p => p.TipoRol)
                         .Where(u => u.TipoRolId == 2);
 
                     return View(await uPBEatsContext.ToListAsync());
+                }
+                else
+                {
+                    return RedirectToAction("Principal", "Home");
                 }
             }
             //Retorno a la pagina de inicio
@@ -216,24 +216,31 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (id == null)
+                if (HomeController.getUsuarioTipoRolId == 1)
                 {
-                    return NotFound();
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var vendedor = await _context.Usuario
+                        .Include(u => u.TipoRol)
+                        .FirstOrDefaultAsync(m => m.Id == id);
+
+                    productosVendedor = _context.Producto
+                        .Where(m => m.UsuarioId == id).ToList();
+
+                    if (vendedor == null)
+                    {
+                        return NotFound();
+                    }
+                    ViewData["Resultado"] = " ";
+                    return View(vendedor);
                 }
-
-                var vendedor = await _context.Usuario
-                    .Include(u => u.TipoRol)
-                    .FirstOrDefaultAsync(m => m.Id == id);
-
-                productosVendedor = _context.Producto
-                    .Where(m => m.UsuarioId == id).ToList();
-
-                if (vendedor == null)
+                else
                 {
-                    return NotFound();
+                    return RedirectToAction("Principal", "Home");
                 }
-                ViewData["Resultado"] = " ";
-                return View(vendedor);
             }
             return RedirectToAction("Principal", "Home");
         }
