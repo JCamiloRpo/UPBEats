@@ -20,6 +20,6 @@ namespace UPBEats.Data
 
         public DbSet<ProductoFavorito> ProductoFavorito { get; set; }
 
-
+        public DbSet<VendedorFavorito> VendedorFavorito { get; set; }
     }
 }
