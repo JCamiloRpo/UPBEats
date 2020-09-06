@@ -47,6 +47,7 @@ namespace UPBEats.Models
         public IFormFile FileFoto { get; set; }
 
         //Propiedad de sólo lectura para obtener nombre completo del usuario
+        [NotMapped]
         public string NombreCompleto
         {
             get
@@ -55,6 +56,7 @@ namespace UPBEats.Models
             }
         }
 
+        [NotMapped]
         public int NumeroProductos
         {
             get
