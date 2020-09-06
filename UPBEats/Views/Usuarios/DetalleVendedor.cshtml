@@ -68,9 +68,73 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <!-- Mostramos la tarjeta de productos sólo si el vendedor tiene productos ya publicados-->
+    @if (UPBEats.Controllers.UsuariosController.getNumProductos > 0)
+    {
+        @foreach (var item in UPBEats.Controllers.UsuariosController.productosVendedor)
+        {
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Nombre)</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!--Campos a la derecha-->
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p>@Html.DisplayFor(modeItem => item.Descripcion)</p>
+                                                <hr class="divider my-3" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 text-center">
+                                                <h6>@Html.DisplayNameFor(modeItem => item.Precio)</h6>
+                                            </div>
+                                            <div class="col-md-6 text-center">
+                                                <p>@Html.DisplayFor(modeItem => item.Precio)</p>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Foto a la DErecha-->
+                                    <div class="col-lg-4 text-center justify-content-center">
+                                        <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Producto" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center text-muted">
+                                        @if (item.Disponible)
+                                        {
+                                            <p>
+                                                Disponible
+                                                <i class="fas fa-smile text-muted"></i>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                Agotado
+                                                <i class="fas fa-frown text-muted"></i>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+
 </section>
 
 }

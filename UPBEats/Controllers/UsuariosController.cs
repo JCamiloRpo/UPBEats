@@ -20,6 +20,7 @@ namespace UPBEats.Controllers
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
         public static List<Usuario> vendedores;
+        public static List<Producto> productosVendedor;
         private static int numProductos = -1;
 
         public static int getNumProductos { get => numProductos; }
@@ -229,6 +230,9 @@ namespace UPBEats.Controllers
                 var vendedor = await _context.Usuario
                     .Include(u => u.TipoRol)
                     .FirstOrDefaultAsync(m => m.Id == id);
+
+                productosVendedor = _context.Producto
+                    .Where(m => m.UsuarioId == id).ToList();
 
                 NumProductos(vendedor.Id);
 
