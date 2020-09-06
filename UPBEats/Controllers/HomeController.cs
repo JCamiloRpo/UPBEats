@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -140,7 +141,7 @@ namespace UPBEats.Controllers
                     setRegistro(false);
                     return RedirectToAction("Create", "Usuarios");
                 }
-                    
+
 
                 setRegistro(true);
                 return RedirectToAction("Index", "Home");
@@ -170,5 +171,6 @@ namespace UPBEats.Controllers
                 setUsuarioTipoRolId(usuario.TipoRolId);
             }
         }
+
     }
 }

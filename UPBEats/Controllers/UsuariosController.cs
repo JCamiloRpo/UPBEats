@@ -19,6 +19,14 @@ namespace UPBEats.Controllers
     {
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
+        public static List<Usuario> vendedores;
+        private static int numProductos = -1;
+
+        public static int getNumProductos { get => numProductos; }
+        public static void setNumProductos(int val)
+        {
+            numProductos = val;
+        }
 
         public UsuariosController(UPBEatsContext context, IWebHostEnvironment env)
         {
@@ -34,6 +42,34 @@ namespace UPBEats.Controllers
                 //Codigo independiente de cada metodo
                 var uPBEatsContext = _context.Usuario.Include(u => u.TipoRol);
                 return View(await uPBEatsContext.ToListAsync());
+            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
+        }
+
+        // GET: Vendedores
+        public async Task<IActionResult> ListaVendedores()
+        {
+            if (ControlIngreso())
+            {
+                if (HomeController.getUsuarioTipoRolId == 1)//Si es vendedor
+                {
+                    // TODO
+                }
+                else //Si es comprador
+                {
+                    var uPBEatsContext = _context.Usuario
+                        .Include(p => p.TipoRol)
+                        .Where(u => u.TipoRolId == 2);
+
+                    //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
+                    /*vendedores = _context.Usuario
+                        .Include(p => p.Nombre)
+                        .Include(p => p.Apellido)
+                        .Where(u => u.TipoRolId == 2).ToListAsync().Result; //Solo ver mis productos favoritos*/
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
             }
             //Retorno a la pagina de inicio
             return RedirectToAction("Principal", "Home");
@@ -64,10 +100,10 @@ namespace UPBEats.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,FileFoto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
         {
-            
+
             if (ModelState.IsValid)
             {
-                if(usuario.FileFoto != null)
+                if (usuario.FileFoto != null)
                 {
                     var stream = new MemoryStream();
                     await usuario.FileFoto.CopyToAsync(stream);
@@ -146,7 +182,7 @@ namespace UPBEats.Controllers
             {
                 return NotFound();
             }
-            
+
             if (ModelState.IsValid)
             {
                 if (usuario.FileFoto != null)
@@ -176,6 +212,34 @@ namespace UPBEats.Controllers
                 return Details(id).Result;
             }
             return Details(id).Result;
+        }
+
+        // POST: Usuarios/DetalleVendedor/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<IActionResult> DetalleVendedor(int? id)
+        {
+            if (ControlIngreso())
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var vendedor = await _context.Usuario
+                    .Include(u => u.TipoRol)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                NumProductos(vendedor.Id);
+
+                if (vendedor == null)
+                {
+                    return NotFound();
+                }
+                ViewData["Resultado"] = " ";
+                return View(vendedor);
+            }
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: Usuarios/Delete/5
@@ -236,5 +300,18 @@ namespace UPBEats.Controllers
             }
             return false;
         }
+        private void NumProductos(int userid)
+        {
+            var usuario = _context.Usuario.FirstOrDefault(m => m.Id == userid);
+            if (usuario != null)
+            {
+                if (usuario.TipoRol.Nombre.Equals("Vendedor"))
+                {
+                    int numProductos = _context.Producto.Count(m => m.UsuarioId == userid);
+                    setNumProductos(numProductos);
+                }
+            }
+        }
+
     }
 }

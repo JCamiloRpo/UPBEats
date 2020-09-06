@@ -14,7 +14,7 @@ namespace UPBEats.Models
     {
         public int Id { get; set; }
         //El nombre del usuario
-        [Required(ErrorMessage ="Debe ingresar un nombre")]
+        [Required(ErrorMessage = "Debe ingresar un nombre")]
         public string Nombre { get; set; }
         //El apellido del usuario
         [Required(ErrorMessage = "Debe ingresar un apellido")]
@@ -25,7 +25,7 @@ namespace UPBEats.Models
         //La foto que desea el usuario
         public byte[] Foto { get; set; }
         //Elegir un tipo de rol
-        [Display(Name ="Rol")]
+        [Display(Name = "Rol")]
         [Required(ErrorMessage = "Debe seleccionar un rol")]
         public int TipoRolId { get; set; }
         //Se incluyen acá los siguientes campos para tener un mejor rendimiento evitando un inner join
@@ -45,5 +45,14 @@ namespace UPBEats.Models
         //Campo para la imagen de perfil
         [NotMapped]
         public IFormFile FileFoto { get; set; }
+
+        //Propiedad de sólo lectura para obtener nombre completo del usuario
+        public string NombreCompleto
+        {
+            get
+            {
+                return Nombre + " " + Apellido;
+            }
+        }
     }
 }
