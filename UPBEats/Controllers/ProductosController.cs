@@ -80,9 +80,11 @@ namespace UPBEats.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId,Disponible")] Producto producto)
         {
+            var usuario = _context.Usuario.FirstOrDefault(m => m.Correo == User.Identity.Name);
 
             if (ModelState.IsValid)
             {
+                usuario.Productos.Add(producto);
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

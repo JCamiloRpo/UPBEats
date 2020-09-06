@@ -19,6 +19,15 @@ namespace UPBEats.Controllers
     {
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
+        public static List<Usuario> vendedores;
+        public static List<Producto> productosVendedor;
+        private static int numProductos = -1;
+
+        public static int getNumProductos { get => numProductos; }
+        public static void setNumProductos(int val)
+        {
+            numProductos = val;
+        }
 
         public UsuariosController(UPBEatsContext context, IWebHostEnvironment env)
         {
@@ -34,6 +43,28 @@ namespace UPBEats.Controllers
                 //Codigo independiente de cada metodo
                 var uPBEatsContext = _context.Usuario.Include(u => u.TipoRol);
                 return View(await uPBEatsContext.ToListAsync());
+            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
+        }
+
+        // GET: Vendedores
+        public async Task<IActionResult> ListaVendedores()
+        {
+            if (ControlIngreso())
+            {
+                if (HomeController.getUsuarioTipoRolId == 1) //Si es comprador
+                {
+                    var uPBEatsContext = _context.Usuario
+                        .Include(p => p.TipoRol)
+                        .Where(u => u.TipoRolId == 2);
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
+                else
+                {
+                    return RedirectToAction("Principal", "Home");
+                }
             }
             //Retorno a la pagina de inicio
             return RedirectToAction("Principal", "Home");
@@ -64,10 +95,10 @@ namespace UPBEats.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,FileFoto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
         {
-            
+
             if (ModelState.IsValid)
             {
-                if(usuario.FileFoto != null)
+                if (usuario.FileFoto != null)
                 {
                     var stream = new MemoryStream();
                     await usuario.FileFoto.CopyToAsync(stream);
@@ -146,7 +177,7 @@ namespace UPBEats.Controllers
             {
                 return NotFound();
             }
-            
+
             if (ModelState.IsValid)
             {
                 if (usuario.FileFoto != null)
@@ -176,6 +207,42 @@ namespace UPBEats.Controllers
                 return Details(id).Result;
             }
             return Details(id).Result;
+        }
+
+        // POST: Usuarios/DetalleVendedor/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        public async Task<IActionResult> DetalleVendedor(int? id)
+        {
+            if (ControlIngreso())
+            {
+                if (HomeController.getUsuarioTipoRolId == 1)
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var vendedor = await _context.Usuario
+                        .Include(u => u.TipoRol)
+                        .FirstOrDefaultAsync(m => m.Id == id);
+
+                    productosVendedor = _context.Producto
+                        .Where(m => m.UsuarioId == id).ToList();
+
+                    if (vendedor == null)
+                    {
+                        return NotFound();
+                    }
+                    ViewData["Resultado"] = " ";
+                    return View(vendedor);
+                }
+                else
+                {
+                    return RedirectToAction("Principal", "Home");
+                }
+            }
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: Usuarios/Delete/5
