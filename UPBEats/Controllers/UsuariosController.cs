@@ -53,7 +53,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 1)//Si es vendedor
+                if (HomeController.getUsuarioTipoRolId == 2)//Si es vendedor
                 {
                     // TODO
                 }
@@ -62,12 +62,6 @@ namespace UPBEats.Controllers
                     var uPBEatsContext = _context.Usuario
                         .Include(p => p.TipoRol)
                         .Where(u => u.TipoRolId == 2);
-
-                    //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
-                    /*vendedores = _context.Usuario
-                        .Include(p => p.Nombre)
-                        .Include(p => p.Apellido)
-                        .Where(u => u.TipoRolId == 2).ToListAsync().Result; //Solo ver mis productos favoritos*/
 
                     return View(await uPBEatsContext.ToListAsync());
                 }
@@ -234,8 +228,6 @@ namespace UPBEats.Controllers
                 productosVendedor = _context.Producto
                     .Where(m => m.UsuarioId == id).ToList();
 
-                NumProductos(vendedor.Id);
-
                 if (vendedor == null)
                 {
                     return NotFound();
@@ -304,18 +296,5 @@ namespace UPBEats.Controllers
             }
             return false;
         }
-        private void NumProductos(int userid)
-        {
-            var usuario = _context.Usuario.FirstOrDefault(m => m.Id == userid);
-            if (usuario != null)
-            {
-                if (usuario.TipoRol.Nombre.Equals("Vendedor"))
-                {
-                    int numProductos = _context.Producto.Count(m => m.UsuarioId == userid);
-                    setNumProductos(numProductos);
-                }
-            }
-        }
-
     }
 }

@@ -54,5 +54,20 @@ namespace UPBEats.Models
                 return Nombre + " " + Apellido;
             }
         }
+
+        public int NumeroProductos
+        {
+            get
+            {
+                if (Productos == null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return Productos.Count;
+                }
+            }
+        }
     }
 }

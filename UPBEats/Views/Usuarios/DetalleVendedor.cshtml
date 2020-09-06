@@ -49,7 +49,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12 text-center text-muted">
-                                @if (UPBEats.Controllers.UsuariosController.getNumProductos == 0)
+                                @if (Model.NumeroProductos == 0)
                                 {
                                     <p>
                                         Este vendedor aún no ha publicado productos
@@ -59,7 +59,7 @@
                                 else
                                 {
                                     <p>
-                                        Este vendedor ha publicado @UPBEats.Controllers.UsuariosController.getNumProductos productos
+                                        Este vendedor ha publicado @Model.NumeroProductos productos
                                         <i class="fas fa-shopping-cart text-muted"></i>
                                     </p>
                                 }
@@ -72,9 +72,9 @@
     </div>
 
     <!-- Mostramos la tarjeta de productos sólo si el vendedor tiene productos ya publicados-->
-    @if (UPBEats.Controllers.UsuariosController.getNumProductos > 0)
+    @if (Model.NumeroProductos > 0)
     {
-        @foreach (var item in UPBEats.Controllers.UsuariosController.productosVendedor)
+        @foreach (var item in Model.Productos)
         {
             <div class="container">
                 <div class="row justify-content-center">
@@ -136,5 +136,3 @@
 
 
 </section>
-
-}
