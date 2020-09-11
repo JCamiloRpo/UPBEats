@@ -13,6 +13,22 @@
                     <!-- Card Header -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Información del vendedor</h6>
+                        <div class="dropdown no-arrow">
+
+                            <form asp-controller="ProductoFavoritos" asp-action="Favorito">
+                                <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
+                                    @if (Convert.ToBoolean(ViewData["Favorito"]))
+                                    {
+                                        <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
+                                    }
+                                </button>
+                            </form>
+
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row justify-content-center">
@@ -82,6 +98,20 @@
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Nombre)</h6>
+                                <div class="dropdown no-arrow">
+
+                                    <a class="btn btn-secondary btn-circle" asp-route-id="@item.Id">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                    <a class="btn btn-secondary btn-circle" asp-action="DetalleVendedor" asp-route-id="@item.Id">
+                                        <i class="fas fa-info"></i>
+                                    </a>
+
+                                    <form asp-controller="Usuarios" asp-action="ListaVendedores">
+                                        <input type="hidden" value="@item.Id" name="ProductoId" />
+                                        <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                    </form>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -133,6 +163,4 @@
             </div>
         }
     }
-
-
 </section>
