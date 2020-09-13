@@ -1,9 +1,14 @@
 ﻿@model IEnumerable<UPBEats.Models.Producto>
 
-    @{
-        ViewData["Title"] = "Inicio";
-    }
+@{
+    ViewData["Title"] = "Inicio";
+}
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
     <section class="page-section">
         <div class="container">
             <div class="row">
@@ -12,16 +17,17 @@
                     <div class="col-lg-6">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <a class="m-0 font-weight-bold text-primary" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Nombre)</a>
+                                <a class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Nombre)</a>
                                 <div class="dropdown no-arrow">
                                     @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
                                     {
                                         <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a class="btn btn-secondary btn-circle" asp-action="Delete" asp-route-id="@item.Id">
+
+                                        <button class="btn btn-secondary btn-circle" onclick="return EliminarProducto(@item.Id)">
                                             <i class="fas fa-trash"></i>
-                                        </a>
+                                        </button>
                                     }
                                     else//Opciones para el comprador
                                     {
@@ -92,4 +98,45 @@
             </div>
         </div>
     </section>
+</body>
+</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script type="text/javascript">
+        function EliminarProducto(id) {
+            Swal.fire({
+                title: '¿Está seguro de eliminar este producto?',
+                text: "No se puede revertir esta acción",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, borrar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                $.ajax({
+                    type: "Delete",
+                    url: '@Url.Action("Borrar", "Productos")',
+                    data: { id: id }
+                }).done(function () {
+
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Eliminado',
+                            'Este producto se ha eliminado correctamente',
+                            'success'
+                        ).then((result) => {
+                            location.reload();
+                        })
+                    }
+
+                });
+
+            })
+        }
+    </script>
+}
+
 
