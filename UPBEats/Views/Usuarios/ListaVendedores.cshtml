@@ -19,10 +19,6 @@
                                 }
                                 else//Opciones para el comprador
                                 {
-
-                                    <a class="btn btn-secondary btn-circle" asp-route-id="@item.Id">
-                                        <i class="fas fa-heart"></i>
-                                    </a>
                                     <a class="btn btn-secondary btn-circle" asp-action="DetalleVendedor" asp-route-id="@item.Id">
                                         <i class="fas fa-info"></i>
                                     </a>
@@ -45,10 +41,8 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 text-center">
-                                            <h6>@Html.DisplayNameFor(modeItem => item.DescEmprendimiento)</h6>
-                                        </div>
-                                        <div class="col-md-6 text-center">
+
+                                        <div class="col-md-12 text-center">
                                             <p>@Html.DisplayFor(modeItem => item.DescEmprendimiento)</p>
                                             <br />
                                         </div>
@@ -58,6 +52,24 @@
                                 <div class="col-lg-4 text-center justify-content-center">
                                     <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Vendedor" />
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center text-muted">
+                                        @if (item.NumeroProductos == 0)
+                                        {
+                                            <p>
+                                                Este vendedor aún no ha publicado productos
+                                                <i class="fas fa-shopping-cart text-muted"></i>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                Este vendedor ha publicado @item.NumeroProductos productos
+                                                <i class="fas fa-shopping-cart text-muted"></i>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -66,4 +78,3 @@
         </div>
     </div>
 </section>
-
