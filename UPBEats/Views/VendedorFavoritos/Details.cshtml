@@ -1,39 +1,166 @@
 ﻿@model UPBEats.Models.VendedorFavorito
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Perfil";
 }
 
-<!DOCTYPE html>
+<section class="page-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Basic Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Información del vendedor</h6>
+                        <div class="dropdown no-arrow">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
+                            <form asp-controller="ProductoFavoritos" asp-action="Favorito">
+                                <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
+                                    @if (Convert.ToBoolean(ViewData["Favorito"]))
+                                    {
+                                        <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
+                                    }
+                                </button>
+                            </form>
 
-<div>
-    <h4>VendedorFavorito</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Comprador)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Comprador.Apellido)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Vendedor)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Vendedor.Apellido)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-</body>
-</html>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <img class="rounded-circle" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(Model.Vendedor.Foto)" width="100" height="100" alt="" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <h2><p>@Html.DisplayFor(VendedorFavorito =>  VendedorFavorito.Vendedor.NombreCompleto)</p></h2>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <h6>Emprendimiento</h6>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <p>@Html.DisplayFor(VendedorFavorito => VendedorFavorito.Vendedor.Emprendimiento)</p>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-md-6 text-center">
+                                    <h6>Descripción del emprendimiento</h6>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <p>@Html.DisplayFor(VendedorFavorito => VendedorFavorito.Vendedor.DescEmprendimiento)</p>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center text-muted">
+                                @if (Model.Vendedor.NumeroProductos == 0)
+                                {
+                                    <p>
+                                        Este vendedor aún no ha publicado productos
+                                        <i class="fas fa-shopping-cart text-muted"></i>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+                                        Este vendedor ha publicado @Model.Vendedor.NumeroProductos productos
+                                        <i class="fas fa-shopping-cart text-muted"></i>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mostramos la tarjeta de productos sólo si el vendedor tiene productos ya publicados-->
+    @if (Model.Vendedor.NumeroProductos > 0)
+    {
+        @foreach (var item in Model.Vendedor.Productos)
+        {
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Nombre)</h6>
+                                <div class="dropdown no-arrow">
+
+                                    <a class="btn btn-secondary btn-circle" asp-route-id="@item.Id">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                    <a class="btn btn-secondary btn-circle" asp-action="DetalleVendedor" asp-route-id="@item.Id">
+                                        <i class="fas fa-info"></i>
+                                    </a>
+
+                                    <form asp-controller="Usuarios" asp-action="ListaVendedores">
+                                        <input type="hidden" value="@item.Id" name="ProductoId" />
+                                        <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!--Campos a la derecha-->
+                                    <div class="col-lg-8">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p>@Html.DisplayFor(modeItem => item.Descripcion)</p>
+                                                <hr class="divider my-3" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 text-center">
+                                                <h6>@Html.DisplayNameFor(modeItem => item.Precio)</h6>
+                                            </div>
+                                            <div class="col-md-6 text-center">
+                                                <p>@Html.DisplayFor(modeItem => item.Precio)</p>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Foto a la DErecha-->
+                                    <div class="col-lg-4 text-center justify-content-center">
+                                        <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Producto" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-center text-muted">
+                                        @if (item.Disponible)
+                                        {
+                                            <p>
+                                                Disponible
+                                                <i class="fas fa-smile text-muted"></i>
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                Agotado
+                                                <i class="fas fa-frown text-muted"></i>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</section>
