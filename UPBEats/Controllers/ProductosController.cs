@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using UPBEats.Data;
 using UPBEats.Models;
@@ -80,11 +82,9 @@ namespace UPBEats.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,Precio,Foto,UsuarioId,Disponible")] Producto producto)
         {
-            var usuario = _context.Usuario.FirstOrDefault(m => m.Correo == User.Identity.Name);
 
             if (ModelState.IsValid)
             {
-                usuario.Productos.Add(producto);
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -204,7 +204,45 @@ namespace UPBEats.Controllers
                 }
             }
             //Retorno a la pagina de inicio
-            return RedirectToAction("Principal", "Home");  
+            return RedirectToAction("Principal", "Home");
+        }
+
+        public async Task<ActionResult> Borrar(int id)
+        {
+            if (ControlIngreso())
+            {
+                if (HomeController.getUsuarioTipoRolId == 2)
+                {
+                    // se obtiene el usuario logueado y el producto
+                    var vendedor = await _context.Usuario
+                        .FirstOrDefaultAsync(m => m.Correo == User.Identity.Name);
+
+                    var producto = await _context.Producto.FindAsync(id);
+                    _context.Producto.Remove(producto);
+
+                    // si alguno de estos dos es null devolvemos error
+                    if (producto == null || vendedor == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // verificamos que el producto a borrar pertenezca al usuario logueado
+                    if (vendedor.Id == producto.UsuarioId)
+                    {
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                }
+
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Productos/Delete/5
