@@ -12,7 +12,7 @@
                 <div class="col-lg-6">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <a class="m-0 font-weight-bold text-primary" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Producto.Nombre)</a>
+                            <a class="m-0 font-weight-bold text-primary" asp-controller="Productos" asp-action="Details" asp-route-id="@item.ProductoId">@Html.DisplayFor(modeItem => item.Producto.Nombre)</a>
                             <div class="dropdown no-arrow">
                                 <form asp-action="Delete">
                                     <input type="hidden" name="Id" value="@item.Id" />
