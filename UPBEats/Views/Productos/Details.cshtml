@@ -19,9 +19,9 @@
                                 <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@Model.Id">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a class="btn btn-secondary btn-circle" asp-action="Delete" asp-route-id="@Model.Id">
+                                <button class="btn btn-secondary btn-circle" data-toggle="modal" data-target="#EliminarProducto">
                                     <i class="fas fa-trash"></i>
-                                </a>
+                                </button>
                             }
                             else//Opciones para el comprador
                             {
@@ -96,7 +96,29 @@
                     </div>
                 </div>
             </div>
-
+            <div class="modal fade" id="EliminarProducto" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">¿Está seguro de eliminar el producto @Model.Nombre?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            No se puede revertir esta acción
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="modal-footer">
+                            <form asp-action="Delete">
+                                <input type="hidden" asp-for="Id" />
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-primary" type="submit">Confirmar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
