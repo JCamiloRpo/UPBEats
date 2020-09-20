@@ -19,8 +19,7 @@ namespace UPBEats.Controllers
     {
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
-        public static List<Usuario> vendedores;
-        public static List<Producto> productosVendedor;
+        private static List<VendedorFavorito> vendedorFavoritos;
         private static int numProductos = -1;
 
         public static int getNumProductos { get => numProductos; }
@@ -57,7 +56,14 @@ namespace UPBEats.Controllers
                 {
                     var uPBEatsContext = _context.Usuario
                         .Include(p => p.TipoRol)
+                        .Include(p => p.Productos)
                         .Where(u => u.TipoRolId == 2);
+
+                    //Lista de vendedores favoritos del usuario para poder personalizar la vista del boton de favorito
+                    vendedorFavoritos = _context.VendedorFavorito
+                        .Include(p => p.Comprador)
+                        .Include(p => p.Vendedor)
+                        .Where(u => u.CompradorId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis vendedores favoritos
 
                     return View(await uPBEatsContext.ToListAsync());
                 }
@@ -225,10 +231,8 @@ namespace UPBEats.Controllers
 
                     var vendedor = await _context.Usuario
                         .Include(u => u.TipoRol)
+                        .Include(u => u.Productos)
                         .FirstOrDefaultAsync(m => m.Id == id);
-
-                    productosVendedor = _context.Producto
-                        .Where(m => m.UsuarioId == id).ToList();
 
                     if (vendedor == null)
                     {
@@ -281,6 +285,16 @@ namespace UPBEats.Controllers
         private bool UsuarioExists(int id)
         {
             return _context.Usuario.Any(e => e.Id == id);
+        }
+
+        /**
+        * Params usuarioId, vendedorId
+        * Return N/A
+        * Se realiza la consulta de que si el usuario tiene ese producto en favoritos utilizado en Index desde el html
+        */
+        public static bool IsVendedorFavorito(int usuarioId, int vendedorId)
+        {
+            return vendedorFavoritos.Any(m => m.VendedorId == vendedorId && m.CompradorId == usuarioId);
         }
 
         /**

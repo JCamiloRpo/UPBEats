@@ -1,8 +1,13 @@
 ﻿@model IEnumerable<UPBEats.Models.Usuario>
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
+@{
+    var token = antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
 
 @{
     ViewData["Title"] = "Inicio";
 }
+
 <section class="page-section">
     <div class="container">
         <div class="row">
@@ -10,66 +15,46 @@
             {
                 <div class="col-lg-6">
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <span class="m-0 font-weight-bold text-primary" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.NombreCompleto)</span>
+                        <div class="card-header py-3 d-flex flex-row justify-content-between">
+                            <img class="img-profile rounded-circle" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" />
+                            <a class="m-0 font-weight-bold text-primary" asp-action="DetalleVendedor" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.NombreCompleto)</a>
                             <div class="dropdown no-arrow">
-                                @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
-                                {
-                                    // TODO
-                                }
-                                else//Opciones para el comprador
-                                {
-                                    <a class="btn btn-secondary btn-circle" asp-action="DetalleVendedor" asp-route-id="@item.Id">
-                                        <i class="fas fa-info"></i>
-                                    </a>
-
-                                    <form asp-controller="Usuarios" asp-action="ListaVendedores">
-                                        <input type="hidden" value="@item.Id" name="ProductoId" />
-                                        <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
-                                    </form>
-                                }
+                                <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getIdUsuario,@item.Id)">
+                                    @if (UPBEats.Controllers.UsuariosController.IsVendedorFavorito(@UPBEats.Controllers.HomeController.getIdUsuario, item.Id))
+                                    {
+                                        <i class="fas fa-heart fa-2x text-primary" id="iconFavorito-@item.Id"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito-@item.Id"></i>
+                                    }
+                                </button>
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <!--Campos a la derecha-->
-                                <div class="col-lg-8">
-                                    <div class="row">
-                                        <div class="col-md-12 text-center">
-                                            <p>@Html.DisplayFor(modeItem => item.Emprendimiento)</p>
-                                            <hr class="divider my-3" />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-
-                                        <div class="col-md-12 text-center">
-                                            <p>@Html.DisplayFor(modeItem => item.DescEmprendimiento)</p>
-                                            <br />
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Foto a la DErecha-->
-                                <div class="col-lg-4 text-center justify-content-center">
-                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Vendedor" />
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-center text-muted">
-                                        @if (item.NumeroProductos == 0)
-                                        {
-                                            <p>
-                                                Este vendedor aún no ha publicado productos
-                                                <i class="fas fa-shopping-cart text-muted"></i>
-                                            </p>
-                                        }
-                                        else
-                                        {
-                                            <p>
-                                                Este vendedor ha publicado @item.NumeroProductos productos
-                                                <i class="fas fa-shopping-cart text-muted"></i>
-                                            </p>
-                                        }
-                                    </div>
-                                </div>
+                            <div class="col-md-12 text-center">
+                                <p>@Html.DisplayFor(modeItem => item.Emprendimiento)</p>
+                                <hr class="divider my-3" />
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <p>@Html.DisplayFor(modeItem => item.DescEmprendimiento)</p>
+                                <br />
+                            </div>
+                            <div class="col-md-12 text-center text-muted">
+                                @if (item.NumeroProductos == 0)
+                                {
+                                    <p>
+                                        Este vendedor aún no ha publicado productos
+                                        <i class="fas fa-cubes text-muted"></i>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+                                        Este vendedor ha publicado @item.NumeroProductos productos
+                                        <i class="fas fa-cubes text-muted"></i>
+                                    </p>
+                                }
                             </div>
                         </div>
                     </div>
@@ -78,3 +63,27 @@
         </div>
     </div>
 </section>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+        function btnFavorito(usuarioId, vendedorId) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Favorito", "VendedorFavoritos")',
+                data: { CompradorId: usuarioId, VendedorId: vendedorId, __RequestVerificationToken: '@token'}
+            }).done(function () {
+                if ($('#iconFavorito-' + vendedorId).hasClass('text-primary')) {
+                    $('#iconFavorito-' + vendedorId).removeClass('text-primary');
+                    $('#iconFavorito-' + vendedorId).addClass('text-secondary');
+                }
+                else {
+                    $('#iconFavorito-' + vendedorId).removeClass('text-secondary');
+                    $('#iconFavorito-' + vendedorId).addClass('text-primary');
+                }
+
+            });
+        }
+</script>
+
+}

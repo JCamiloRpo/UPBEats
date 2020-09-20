@@ -4,102 +4,95 @@
     ViewData["Title"] = "Inicio";
 }
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-</head>
-<body>
-    <section class="page-section">
-        <div class="container">
-            <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-lg-6">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <a class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => item.Nombre)</a>
-                                <div class="dropdown no-arrow">
-                                    @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
-                                    {
-                                        <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
+<section class="page-section">
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <a class="m-0 font-weight-bold text-primary" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Nombre)</a>
+                            <div class="dropdown no-arrow">
+                                @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
+                                {
+                                    <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
 
-                                        <button class="btn btn-secondary btn-circle" onclick="return EliminarProducto(@item.Id)">
-                                            <i class="fas fa-trash"></i>
+                                    <button class="btn btn-secondary btn-circle" onclick="return EliminarProducto(@item.Id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                }
+                                else//Opciones para el comprador
+                                {
+                                    <form asp-controller="ProductoFavoritos" asp-action="Favorito">
+                                        <input type="hidden" value="@item.Id" name="ProductoId" />
+                                        <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                        <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
+                                            @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(@UPBEats.Controllers.HomeController.getIdUsuario, item.Id))
+                                            {
+                                                <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
+                                            }
                                         </button>
-                                    }
-                                    else//Opciones para el comprador
-                                    {
-                                        <form asp-controller="ProductoFavoritos" asp-action="Favorito">
-                                            <input type="hidden" value="@item.Id" name="ProductoId" />
-                                            <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
-                                            <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
-                                                @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(item.Id, @UPBEats.Controllers.HomeController.getIdUsuario))
-                                                {
-                                                    <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito"></i>
-                                                }
-                                            </button>
-                                        </form>
-                                    }
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!--Campos a la derecha-->
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <p>@Html.DisplayFor(modeItem => item.Descripcion)</p>
+                                            <hr class="divider my-3" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <h6>@Html.DisplayNameFor(modeItem => item.Precio)</h6>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <p>@Html.DisplayFor(modeItem => item.Precio)</p>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Foto a la DErecha-->
+                                <div class="col-lg-4 text-center justify-content-center">
+                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Producto" />
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!--Campos a la derecha-->
-                                    <div class="col-lg-8">
-                                        <div class="row">
-                                            <div class="col-md-12 text-center">
-                                                <p>@Html.DisplayFor(modeItem => item.Descripcion)</p>
-                                                <hr class="divider my-3" />
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4 text-center">
-                                                <h6>@Html.DisplayNameFor(modeItem => item.Precio)</h6>
-                                            </div>
-                                            <div class="col-md-6 text-center">
-                                                <p>@Html.DisplayFor(modeItem => item.Precio)</p>
-                                                <br />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Foto a la DErecha-->
-                                    <div class="col-lg-4 text-center justify-content-center">
-                                        <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Producto" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 text-center text-muted">
-                                        @if (item.Disponible)
-                                        {
-                                            <p>
-                                                Disponible
-                                                <i class="fas fa-smile text-muted"></i>
-                                            </p>
-                                        }
-                                        else
-                                        {
-                                            <p>
-                                                Agotado
-                                                <i class="fas fa-frown text-muted"></i>
-                                            </p>
-                                        }
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center text-muted">
+                                    @if (item.Disponible)
+                                    {
+                                        <p>
+                                            Disponible
+                                            <i class="fas fa-smile text-muted"></i>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            Agotado
+                                            <i class="fas fa-frown text-muted"></i>
+                                        </p>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
-    </section>
-</body>
-</html>
+    </div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
