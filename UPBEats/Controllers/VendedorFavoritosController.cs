@@ -22,8 +22,17 @@ namespace UPBEats.Controllers
         // GET: VendedorFavoritos
         public async Task<IActionResult> Index()
         {
-            var uPBEatsContext = _context.VendedorFavorito.Include(v => v.Comprador).Include(v => v.Vendedor);
-            return View(await uPBEatsContext.ToListAsync());
+            if (ControlIngreso())
+            {
+                var uPBEatsContext = _context.VendedorFavorito
+                .Include(v => v.Comprador)
+                .Include(v => v.Vendedor)
+                .Include(v => v.Vendedor.Productos)
+                .Where(v => v.CompradorId == HomeController.getIdUsuario); //Solo ver mis vendedores favoritos
+                return View(await uPBEatsContext.ToListAsync());
+            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
         }
 
         // GET: VendedorFavoritos/Details/5
@@ -181,6 +190,27 @@ namespace UPBEats.Controllers
                 _context.Add(vendedorFavorito);
             }
             _context.SaveChanges();
+        }
+
+        /**
+         * Params N/A
+         * Salida true si se permite el ingreso
+         * Se controla el ingreso por medio las variables booleanas que especifican si el usuario está en el sisteme y si ya está registrado
+         */
+        private bool ControlIngreso()
+        {
+            bool ingreso = HomeController.getIngreso, registro = HomeController.getRegistro;
+            //Si el usuario ya ingresó y esta registrado
+            if (ingreso && registro)
+            {
+                return true;
+            }
+            //Si ingresó y no se ha registrado
+            else if (ingreso)
+            {
+                HomeController.setIngreso(false);
+            }
+            return false;
         }
     }
 }
