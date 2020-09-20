@@ -162,5 +162,25 @@ namespace UPBEats.Controllers
         {
             return _context.VendedorFavorito.Any(e => e.Id == id);
         }
+
+        /**
+         * Params Id, CompradorId, VendedorId - Son los datos de la tabla ProductoFavorito
+         * El metodo es llamado para agregar/eliminar de los favoritos el vendedor al cual se le dió click
+         */
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void Favorito([Bind("Id,CompradorId,VendedorId")] VendedorFavorito vendedorFavorito)
+        {
+            var id = _context.VendedorFavorito.FirstOrDefaultAsync(m => m.VendedorId == vendedorFavorito.VendedorId && m.CompradorId == vendedorFavorito.CompradorId).Result;
+            if (id != null)
+            {
+                _context.VendedorFavorito.Remove(id);
+            }
+            else
+            {
+                _context.Add(vendedorFavorito);
+            }
+            _context.SaveChanges();
+        }
     }
 }

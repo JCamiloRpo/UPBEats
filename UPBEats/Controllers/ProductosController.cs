@@ -276,7 +276,7 @@ namespace UPBEats.Controllers
          * Return N/A
          * Se realiza la consulta de que si el usuario tiene ese producto en favoritos utilizado en Index desde el html
          */
-        public static bool IsProductoFavorito(int productoId, int usuarioId)
+        public static bool IsProductoFavorito(int usuarioId, int productoId)
         {
             return productoFavoritos.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
         }
