@@ -234,6 +234,18 @@ namespace UPBEats.Controllers
                         .Include(u => u.Productos)
                         .FirstOrDefaultAsync(m => m.Id == id);
 
+                    //Lista de vendedores favoritos del usuario para poder personalizar la vista del boton de favorito
+                    vendedorFavoritos = _context.VendedorFavorito
+                        .Include(p => p.Comprador)
+                        .Include(p => p.Vendedor)
+                        .Where(u => u.CompradorId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis vendedores favoritos
+
+                    //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
+                    ProductosController.productoFavoritos = _context.ProductoFavorito
+                        .Include(p => p.Producto)
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
+
                     if (vendedor == null)
                     {
                         return NotFound();
