@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using UPBEats.Models;
 
 namespace UPBEats.Controllers
 {
+    [Authorize]
     public class ProductosController : Controller
     {
         private readonly UPBEatsContext _context;
@@ -34,11 +36,11 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)//Si es vendedor
+                if (HomeController.getUsuario.TipoRolId == 2)//Si es vendedor
                 {
                     var uPBEatsContext = _context.Producto
                         .Include(p => p.Usuario)
-                        .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos publicados
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id); //Solo ver mis productos publicados
 
                     return View(await uPBEatsContext.ToListAsync());
                 }
@@ -51,7 +53,37 @@ namespace UPBEats.Controllers
                     productoFavoritos = _context.ProductoFavorito
                         .Include(p => p.Producto)
                         .Include(p => p.Usuario)
-                        .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id).ToListAsync().Result; //Solo ver mis productos favoritos
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
+            }
+            //Retorno a la pagina de inicio
+            return RedirectToAction("Principal", "Home");
+        }
+
+        public async Task<IActionResult> Busqueda()
+        {
+            if (ControlIngreso())
+            {
+                if (HomeController.getUsuario.TipoRolId == 2)//Si es vendedor
+                {
+                    var uPBEatsContext = _context.Producto
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id); //Solo ver mis productos publicados
+
+                    return View(await uPBEatsContext.ToListAsync());
+                }
+                else //Si es comprador
+                {
+                    var uPBEatsContext = _context.Producto
+                        .Include(p => p.Usuario);
+
+                    //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
+                    productoFavoritos = _context.ProductoFavorito
+                        .Include(p => p.Producto)
+                        .Include(p => p.Usuario)
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id).ToListAsync().Result; //Solo ver mis productos favoritos
 
                     return View(await uPBEatsContext.ToListAsync());
                 }
@@ -65,7 +97,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)
+                if (HomeController.getUsuario.TipoRolId == 2)
                 {
                     ViewData["UsuarioId"] = new SelectList(_context.Usuario, "Id", "Apellido");
                     return View(new Producto());
@@ -97,7 +129,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)
+                if (HomeController.getUsuario.TipoRolId == 2)
                 {
                     if (id == null)
                     {
@@ -106,7 +138,7 @@ namespace UPBEats.Controllers
 
                     var producto = await _context.Producto
                         .Include(p => p.Usuario)
-                        .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id) //Solo ver mis productos
                         .FirstOrDefaultAsync(m => m.Id == id);
                     if (producto == null)
                     {
@@ -172,7 +204,7 @@ namespace UPBEats.Controllers
                 {
                     return NotFound();
                 }
-                ViewData["Favorito"] = ProductoFavoritoExists(Convert.ToInt32(id), HomeController.getIdUsuario);
+                ViewData["Favorito"] = ProductoFavoritoExists(Convert.ToInt32(id), HomeController.getUsuario.Id);
                 return View(producto);
             }
             //Retorno a la pagina de inicio
@@ -184,7 +216,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)
+                if (HomeController.getUsuario.TipoRolId == 2)
                 {
                     if (id == null)
                     {
@@ -193,7 +225,7 @@ namespace UPBEats.Controllers
 
                     var producto = await _context.Producto
                         .Include(p => p.Usuario)
-                        .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id) //Solo ver mis productos
                         .FirstOrDefaultAsync(m => m.Id == id);
                     if (producto == null)
                     {
@@ -211,7 +243,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 2)
+                if (HomeController.getUsuario.TipoRolId == 2)
                 {
                     // se obtiene el usuario logueado y el producto
                     var vendedor = await _context.Usuario
@@ -279,6 +311,17 @@ namespace UPBEats.Controllers
         public static bool IsProductoFavorito(int usuarioId, int productoId)
         {
             return productoFavoritos.Any(m => m.ProductoId == productoId && m.UsuarioId == usuarioId);
+        }
+
+        public static decimal precioMax(IEnumerable<Producto> productos)
+        {
+            decimal max = 0;
+            foreach(var i in productos)
+            {
+                if (i.Precio > max)
+                    max = i.Precio;
+            }
+            return max;
         }
 
         /**

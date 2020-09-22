@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using UPBEats.Models;
 
 namespace UPBEats.Controllers
 {
+    [Authorize]
     public class ProductoFavoritosController : Controller
     {
         private readonly UPBEatsContext _context;
@@ -27,7 +29,7 @@ namespace UPBEats.Controllers
                 var uPBEatsContext = _context.ProductoFavorito
                 .Include(p => p.Producto)
                 .Include(p => p.Usuario)
-                .Where(u => u.UsuarioId == HomeController.getIdUsuario); //Solo ver mis productos favoritos
+                .Where(u => u.UsuarioId == HomeController.getUsuario.Id); //Solo ver mis productos favoritos
 
                 return View(await uPBEatsContext.ToListAsync());
             }
@@ -48,7 +50,7 @@ namespace UPBEats.Controllers
                 var productoFavorito = await _context.ProductoFavorito
                     .Include(p => p.Producto)
                     .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos favoritos
+                    .Where(u => u.UsuarioId == HomeController.getUsuario.Id) //Solo ver mis productos favoritos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (productoFavorito == null)
                 {
@@ -105,7 +107,7 @@ namespace UPBEats.Controllers
                 var productoFavorito = await _context.ProductoFavorito
                     .Include(p => p.Producto)
                     .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos favoritos
+                    .Where(u => u.UsuarioId == HomeController.getUsuario.Id) //Solo ver mis productos favoritos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (productoFavorito == null)
                 {
@@ -169,7 +171,7 @@ namespace UPBEats.Controllers
                 var productoFavorito = await _context.ProductoFavorito
                     .Include(p => p.Producto)
                     .Include(p => p.Usuario)
-                    .Where(u => u.UsuarioId == HomeController.getIdUsuario) //Solo ver mis productos favoritos
+                    .Where(u => u.UsuarioId == HomeController.getUsuario.Id) //Solo ver mis productos favoritos
                     .FirstOrDefaultAsync(m => m.Id == id);
                 if (productoFavorito == null)
                 {

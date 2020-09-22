@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using UPBEats.Models;
 
 namespace UPBEats.Controllers
 {
+    [Authorize]
     public class VendedorFavoritosController : Controller
     {
         private readonly UPBEatsContext _context;
@@ -28,7 +30,7 @@ namespace UPBEats.Controllers
                 .Include(v => v.Comprador)
                 .Include(v => v.Vendedor)
                 .Include(v => v.Vendedor.Productos)
-                .Where(v => v.CompradorId == HomeController.getIdUsuario); //Solo ver mis vendedores favoritos
+                .Where(v => v.CompradorId == HomeController.getUsuario.Id); //Solo ver mis vendedores favoritos
                 return View(await uPBEatsContext.ToListAsync());
             }
             //Retorno a la pagina de inicio

@@ -19,8 +19,8 @@
                             <img class="img-profile rounded-circle" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" />
                             <a class="m-0 font-weight-bold text-primary" asp-action="DetalleVendedor" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.NombreCompleto)</a>
                             <div class="dropdown no-arrow">
-                                <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getIdUsuario,@item.Id)">
-                                    @if (UPBEats.Controllers.UsuariosController.IsVendedorFavorito(@UPBEats.Controllers.HomeController.getIdUsuario, item.Id))
+                                <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id,@item.Id)">
+                                    @if (UPBEats.Controllers.UsuariosController.IsVendedorFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id, item.Id))
                                     {
                                         <i class="fas fa-heart fa-2x text-primary" id="iconFavorito-@item.Id"></i>
                                     }
