@@ -20,13 +20,6 @@ namespace UPBEats.Controllers
         private readonly UPBEatsContext _context;
         private readonly IWebHostEnvironment _env;
         private static List<VendedorFavorito> vendedorFavoritos;
-        private static int numProductos = -1;
-
-        public static int getNumProductos { get => numProductos; }
-        public static void setNumProductos(int val)
-        {
-            numProductos = val;
-        }
 
         public UsuariosController(UPBEatsContext context, IWebHostEnvironment env)
         {
@@ -52,7 +45,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 1) //Si es comprador
+                if (HomeController.getUsuario.TipoRolId == 1) //Si es comprador
                 {
                     var uPBEatsContext = _context.Usuario
                         .Include(p => p.TipoRol)
@@ -63,7 +56,7 @@ namespace UPBEats.Controllers
                     vendedorFavoritos = _context.VendedorFavorito
                         .Include(p => p.Comprador)
                         .Include(p => p.Vendedor)
-                        .Where(u => u.CompradorId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis vendedores favoritos
+                        .Where(u => u.CompradorId == HomeController.getUsuario.Id).ToListAsync().Result; //Solo ver mis vendedores favoritos
 
                     return View(await uPBEatsContext.ToListAsync());
                 }
@@ -99,19 +92,12 @@ namespace UPBEats.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,FileFoto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Correo,Foto,TipoRolId,Emprendimiento,DescEmprendimiento")] Usuario usuario)
         {
 
             if (ModelState.IsValid)
             {
-                if (usuario.FileFoto != null)
-                {
-                    var stream = new MemoryStream();
-                    await usuario.FileFoto.CopyToAsync(stream);
-                    usuario.Foto = stream.ToArray();
-                }
-                //Si no se selecciona foto, se pone una por defecto
-                else
+                if (usuario.Foto == null)
                 {
                     Stream foto = _env.WebRootFileProvider.GetFileInfo("images/user.png").CreateReadStream();
                     var stream = new MemoryStream();
@@ -222,7 +208,7 @@ namespace UPBEats.Controllers
         {
             if (ControlIngreso())
             {
-                if (HomeController.getUsuarioTipoRolId == 1)
+                if (HomeController.getUsuario.TipoRolId == 1)
                 {
                     if (id == null)
                     {
@@ -238,13 +224,13 @@ namespace UPBEats.Controllers
                     vendedorFavoritos = _context.VendedorFavorito
                         .Include(p => p.Comprador)
                         .Include(p => p.Vendedor)
-                        .Where(u => u.CompradorId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis vendedores favoritos
+                        .Where(u => u.CompradorId == HomeController.getUsuario.Id).ToListAsync().Result; //Solo ver mis vendedores favoritos
 
                     //Lista de productos favoritos del usuario para poder personalizar la vista del boton de favorito
                     ProductosController.productoFavoritos = _context.ProductoFavorito
                         .Include(p => p.Producto)
                         .Include(p => p.Usuario)
-                        .Where(u => u.UsuarioId == HomeController.getIdUsuario).ToListAsync().Result; //Solo ver mis productos favoritos
+                        .Where(u => u.UsuarioId == HomeController.getUsuario.Id).ToListAsync().Result; //Solo ver mis productos favoritos
 
                     if (vendedor == null)
                     {

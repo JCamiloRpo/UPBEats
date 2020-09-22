@@ -1,0 +1,232 @@
+﻿@model IEnumerable<UPBEats.Models.Producto>
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
+@{
+    var token = antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
+
+@{
+    ViewData["Title"] = "Busqueda";
+}
+
+<section class="page-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-primary">
+                            <i class="fas fa-search fa-sm text-white"></i>
+                        </span>
+                    </div>
+                    <input class="form-control bg-light border-0 small" id="txtBuscador" type="text" placeholder="Buscar..." aria-label="Buscar">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row justify-content-center">
+                    <div class="col-md-2">
+                        <input class="form-control" id="minPrecio" type="text" />
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control js-range-slider" id="filtroPrecio" type="text" />
+                    </div>
+                    <div class="col-md-2">
+                        <input class="form-control" id="maxPrecio" type="text" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="listaProductos">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <a class="m-0 font-weight-bold text-primary" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Nombre)</a>
+                            <div class="dropdown no-arrow">
+                                @if (UPBEats.Controllers.HomeController.getUsuario.TipoRolId == 2)//Opciones para el vendedor
+                                {
+                                    <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-secondary btn-circle" asp-action="Delete" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                }
+                                else//Opciones para el comprador
+                                {
+                                    <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id,@item.Id)">
+                                        @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id, item.Id))
+                                        {
+                                            <i class="fas fa-heart fa-2x text-primary" id="iconFavorito-@item.Id"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-heart fa-2x text-secondary" id="iconFavorito-@item.Id"></i>
+                                        }
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!--Campos a la izquierda-->
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <p>@Html.DisplayFor(modeItem => item.Descripcion)</p>
+                                            <hr class="divider my-3" />
+                                            <p>$ <span class="precio">@Convert.ToInt32(item.Precio)</span> </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Foto a la Derecha-->
+                                <div class="col-lg-4 text-center justify-content-center">
+                                    <img class="rounded" id="imgFoto" src="data:image/jpg;base64, @Convert.ToBase64String(item.Foto)" width="100" height="100" alt="Producto" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center text-muted">
+                                    @if (item.Disponible)
+                                    {
+                                        <p>
+                                            Disponible
+                                            <i class="fas fa-smile text-muted"></i>
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
+                                            Agotado
+                                            <i class="fas fa-frown text-muted"></i>
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/slider.js"></script>
+    <script>
+
+        //Filtro de precio
+        var $range = $("#filtroPrecio");
+        var $inputFrom = $("#minPrecio");
+        var $inputTo = $("#maxPrecio");
+        var instance;
+        var min = 0;
+        var max = @UPBEats.Controllers.ProductosController.precioMax(Model);
+        var from = min;
+        var to = max;
+
+        $(".js-range-slider").ionRangeSlider({
+            type: "fat",
+            grid: true,
+            min: min,
+            max: max,
+            from: from,
+            to: to,
+            prefix: "$",
+            step: 100,
+            onStart: updateInputs,
+            onChange: updateInputs,
+            onFinish: updateInputs
+        });
+        instance = $range.data("ionRangeSlider");
+
+        function updateInputs(data) {
+            from = data.from;
+            to = data.to;
+
+            $inputFrom.prop("value", from);
+            $inputTo.prop("value", to);
+            filtrar();
+        }
+
+        $inputFrom.on("change", function () {
+            var val = $(this).prop("value");
+
+            // validate
+            if (val < min) {
+                val = min;
+            } else if (val > to) {
+                val = to;
+            }
+
+            instance.update({
+                from: val
+            });
+
+            $(this).prop("value", val);
+            filtrar();
+        });
+
+        $inputTo.on("change", function () {
+            var val = $(this).prop("value");
+
+            // validate
+            if (val < from) {
+                val = from;
+            } else if (val > max) {
+                val = max;
+            }
+
+            instance.update({
+                to: val
+            });
+
+            $(this).prop("value", val);
+            filtrar();
+        });
+
+        function filtrar() {
+            $("#listaProductos .col-lg-6").filter(function () {
+                var precio = parseFloat($('.precio', this).text());
+                var texto = $("#txtBuscador").val().toLowerCase();
+
+                $(this).toggle((precio >= parseFloat($inputFrom.val()) && precio <= parseFloat($inputTo.val())) && ($(this).text().toLowerCase().indexOf(texto) > -1));
+            });
+        }
+
+        //Funcion para buscar
+        $(document).ready(function () {
+            $("#txtBuscador").on("keyup", function () {
+                var texto = $(this).val().toLowerCase();
+
+                $("#listaProductos .col-lg-6").filter(function () {
+                    var precio = parseFloat($('.precio', this).text());
+
+                    $(this).toggle(($(this).text().toLowerCase().indexOf(texto) > -1) && (precio >= parseFloat($inputFrom.val()) && precio <= parseFloat($inputTo.val())));
+                });
+
+            });
+        });
+
+
+        //Funcion para agregar/eliminar de favoritos
+        function btnFavorito(usuarioId, productoId) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Favorito", "ProductoFavoritos")',
+                data: { UsuarioId: usuarioId, ProductoId: productoId, __RequestVerificationToken: '@token' }
+            }).done(function () {
+                if ($('#iconFavorito-' + productoId).hasClass('text-primary')) {
+                    $('#iconFavorito-' + productoId).removeClass('text-primary');
+                    $('#iconFavorito-' + productoId).addClass('text-secondary');
+                }
+                else {
+                    $('#iconFavorito-' + productoId).removeClass('text-secondary');
+                    $('#iconFavorito-' + productoId).addClass('text-primary');
+                }
+
+            });
+        }
+    </script>
+}
+

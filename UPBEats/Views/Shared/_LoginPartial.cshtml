@@ -1,56 +1,220 @@
-@using System.Security.Principal
-
+ 
 @if (UPBEats.Controllers.HomeController.getIngreso && UPBEats.Controllers.HomeController.getRegistro)//Menu para el usuario que ya ingresó y esta registrado
 {
-    @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2) //Menu para el usuario que es vendedor
-    {
-    <ul class="navbar-nav ml-auto my-2 my-lg-0">
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Inicio</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">Nosotros</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contacto</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Terminos</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Usuarios" asp-action="Details" asp-route-id="@UPBEats.Controllers.HomeController.getIdUsuario" class="nav-link js-scroll-trigger">Perfil</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Index" class="nav-link js-scroll-trigger">Productos</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Create" class="nav-link js-scroll-trigger">Vender</a></li>
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
-        <li></li>
-    </ul>
-    }
+    <nav class="navbar navbar-expand navbar-light fixed-top py-3 topbar" id="mainNav">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Principal" class="navbar-brand js-scroll-trigger">UPBEats</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <ul class="navbar-nav ml-auto">
+                @if (UPBEats.Controllers.HomeController.getUsuario.TipoRolId == 2) //Menu para el usuario que es vendedor
+                {
 
-    else //Menu para el usuario que es comprador
-    {
-<ul class="navbar-nav ml-auto my-2 my-lg-0">
-    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link js-scroll-trigger">Inicio</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="About" class="nav-link js-scroll-trigger">Nosotros</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Contact" class="nav-link js-scroll-trigger">Contacto</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link js-scroll-trigger">Terminos</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Usuarios" asp-action="Details" asp-route-id="@UPBEats.Controllers.HomeController.getIdUsuario" class="nav-link js-scroll-trigger">Perfil</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Productos" asp-action="Index" class="nav-link js-scroll-trigger">Productos</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="ProductoFavoritos" asp-action="Index" class="nav-link js-scroll-trigger">Productos favoritos</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Usuarios" asp-action="ListaVendedores" class="nav-link js-scroll-trigger">Vendedores</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="VendedorFavoritos" asp-action="Index" class="nav-link js-scroll-trigger">Vendedores favoritos</a></li>
-    <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
-    <li></li>
-</ul>
-    }
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="productos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-newspaper-o fa-fw"></i>
+                        </a>
+                        <!-- Dropdown -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="productos">
+                            <h6 class="dropdown-header">
+                                ¿Qué desea buscar?
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Productos" asp-action="Index">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-cubes text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Mis productos </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Productos" asp-action="Create">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-plus-circle text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Nuevo producto </div>
+                            </a>
+                        </div>
+                    </li>
 
+                }
+                else //Menu para el usuario que es comprador
+                {
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="buscador" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-search fa-fw"></i>
+                        </a>
+                        <!-- Dropdown -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="buscador">
+                            <h6 class="dropdown-header">
+                                ¿Qué desea buscar?
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Productos" asp-action="Busqueda">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-shopping-cart text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Productos </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="Usuarios" asp-action="ListaVendedores">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-address-card text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Vendedores </div>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="favoritos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-heart fa-fw"></i>
+                        </a>
+                        <!-- Dropdown -->
+                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="favoritos">
+                            <h6 class="dropdown-header">
+                                ¿Qué desea ver?
+                            </h6>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="ProductoFavoritos" asp-action="Index">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-shopping-cart text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Productos favoritos </div>
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center" asp-area="" asp-controller="VendedorFavoritos" asp-action="Index">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-address-card text-white"></i>
+                                    </div>
+                                </div>
+                                <div> Vendedores favoritos </div>
+                            </a>
+                        </div>
+                    </li>
+                }
+                <!-- Nav Item - Messages -->
+                <li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-envelope fa-fw"></i>
+                        <!-- Counter - Messages -->
+                        <span class="badge badge-danger badge-counter">7</span>
+                    </a>
+                    <!-- Dropdown - Messages -->
+                    <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                        <h6 class="dropdown-header">
+                            Centro de mensajes
+                        </h6>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" width="40" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="">
+                                <div class="status-indicator bg-success"></div>
+                            </div>
+                            <div class="font-weight-bold">
+                                <div class="text-truncate">Hi there! I am wondering if you can help me with a problem I've been having.</div>
+                                <div class="small text-gray-500">Emily Fowler - 58m</div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" width="40" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
+                                <div class="status-indicator"></div>
+                            </div>
+                            <div>
+                                <div class="text-truncate">I have the photos that you ordered last month, how would you like them sent to you?</div>
+                                <div class="small text-gray-500">Jae Chun - 1d</div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" width="40" src="https://source.unsplash.com/CS2uCrpNzJY/60x60" alt="">
+                                <div class="status-indicator bg-warning"></div>
+                            </div>
+                            <div>
+                                <div class="text-truncate">Last month's report looks great, I am very happy with the progress so far, keep up the good work!</div>
+                                <div class="small text-gray-500">Morgan Alvarez - 2d</div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#">
+                            <div class="dropdown-list-image mr-3">
+                                <img class="rounded-circle" width="40" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="">
+                                <div class="status-indicator bg-success"></div>
+                            </div>
+                            <div>
+                                <div class="text-truncate">Am I a good boy? The reason I ask is because someone told me that people say this to all dogs, even if they aren't good...</div>
+                                <div class="small text-gray-500">Chicken the Dog - 2w</div>
+                            </div>
+                        </a>
+                        <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                    </div>
+                </li>
+
+                <div class="topbar-divider d-none d-sm-block"></div>
+
+                <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">@UPBEats.Controllers.HomeController.getUsuario.NombreCompleto</span>
+                        <img class="img-profile rounded-circle" src="data:image/jpg;base64, @Convert.ToBase64String(UPBEats.Controllers.HomeController.getUsuario.Foto)">
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" asp-area="" asp-controller="Usuarios" asp-action="Details" asp-route-id="@UPBEats.Controllers.HomeController.getUsuario.Id">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Perfil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Configuraciones
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-chart-bar fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Reportes
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" data-toggle="modal" data-target="#salir">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Salir
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 }
 else if (UPBEats.Controllers.HomeController.getIngreso) //Menu para el usuario que esta en la ventana de registro
 {
-    <ul class="navbar-nav ml-auto my-2 my-lg-0">
-        <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Salir</a></li>
-        <li></li>
-    </ul>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Principal" class="navbar-brand js-scroll-trigger">UPBEats</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                <li class="nav-item"><a asp-area="" asp-controller="Home" asp-action="Principal" id="btnSalir" onclick="btnSalir()" class="nav-link js-scroll-trigger btn btn-primary">Cancelar</a></li>
+                <li></li>
+            </ul>
+        </div>
+    </nav>
 }
 else //Menu para el usuario que aun no ha ingresado
 {
-    <ul class="navbar-nav ml-auto my-2 my-lg-0">
-        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
-        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#services">Services</a></li>
-        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a></li>
-        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contact</a></li>
-        <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignIn" onclick="btnIngresar()" class="nav-link js-scroll-trigger btn btn-primary">Ingresar</a></li>
-        <li></li>
-    </ul>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container">
+            <a asp-area="" asp-controller="Home" asp-action="Principal" class="navbar-brand js-scroll-trigger">UPBEats</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto my-2 my-lg-0">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a asp-area="AzureAD" asp-controller="Account" asp-action="SignIn" onclick="btnIngresar()" class="nav-link js-scroll-trigger btn btn-primary">Ingresar</a></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 }
 

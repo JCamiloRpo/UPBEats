@@ -27,7 +27,7 @@ namespace UPBEats.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (HomeController.getUsuarioTipoRolId != 1)
+            if (HomeController.getUsuario.TipoRolId != 1)
                 yield return new ValidationResult("Solo los compradores pueden agregar/tener favoritos");
         }
     }

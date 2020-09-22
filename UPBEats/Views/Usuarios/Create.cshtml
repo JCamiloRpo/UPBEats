@@ -7,139 +7,163 @@
 <header class="masthead-secundary">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-10 row justify-content-center">
-                <div class="brand_logo_container">
-                    <img src="~/images/logo-upb.svg" class="brand_logo" alt="Logo">
+            <div class="col-lg-12">
+                <!-- Basic Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Registro de usuario</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <img class="rounded-circle" id="imgFoto" src="~/images/logo-upb.svg" width="100" height="100">
+                                <hr class="divider my-4" />
+                            </div>
+                            <div class="col-lg-8 text-center">
+                                <form asp-action="Create" enctype="multipart/form-data">
+                                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center ">
+                                            <label class="control-label" asp-for="Nombre"></label>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input class="form-control" asp-for="Nombre" />
+                                                <span class="text-danger" asp-validation-for="Nombre"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="Apellido"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input class="form-control" asp-for="Apellido" />
+                                                <span class="text-danger" asp-validation-for="Apellido"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="Foto"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input class="form-control" asp-for="FileFoto" type="file" accept=".jpg" />
+                                                <input class="form-control" asp-for="Foto" readonly hidden />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="Correo"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input class="form-control" asp-for="Correo" value="@User.Identity.Name" readonly />
+                                                <span class="text-danger" asp-validation-for="Correo"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" id="TipoRolId" asp-for="TipoRolId"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <select class="form-control" id="cmbTipoRolId" asp-for="TipoRolId" asp-items="ViewBag.TipoRolId"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row Emprendimiento" style="display: none;">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="Emprendimiento"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <input class="form-control" asp-for="Emprendimiento" />
+                                                <span class="text-danger" asp-validation-for="Emprendimiento"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row Emprendimiento" style="display: none;">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label class="control-label" asp-for="DescEmprendimiento"></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-center">
+                                            <div class="form-group">
+                                                <textarea class="form-control" asp-for="DescEmprendimiento" rows="2" cols="20"></textarea>
+                                                <span class="text-danger" asp-validation-for="DescEmprendimiento"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <div class="form-group">
+                                                <br />
+                                                <button class="btn btn-primary btn-icon-split" type="submit">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-check"></i>
+                                                    </span>
+                                                    <span class="text">Terminar</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-10 row justify-content-center bg-white rounded">
-                <div class="col-md-10">
-                    <hr class="divider my-3" />
-                    <form asp-action="Create" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="Nombre" class="control-label"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <input asp-for="Nombre" class="form-control" />
-                                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="Apellido" class="control-label"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <input asp-for="Apellido" class="form-control" />
-                                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="Foto" class="control-label"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <input asp-for="FileFoto" class="form-control" type="file" accept=".jpg"/>
-                                </div>
-                            </div>
-                            <!-- <div class="col-md-6 text-center"> <img id="imgPrevia" src="~/images/user.png" width="150" alt="Vista previa" /><br />  </div> -->
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="Correo" class="control-label"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <input asp-for="Correo" class="form-control" readonly value="@User.Identity.Name" />
-                                    <span asp-validation-for="Correo" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="TipoRolId" class="control-label" id="TipoRolId"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <select asp-for="TipoRolId" class="form-control" asp-items="ViewBag.TipoRolId" id="cmbTipoRolId"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="Emprendimiento" class="control-label" id="lbEmprendimiento" style="display:none"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <input asp-for="Emprendimiento" class="form-control" id="txtEmprendimiento" style="display:none"/>
-                                    <span asp-validation-for="Emprendimiento" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <div class="form-group">
-                                    <label asp-for="DescEmprendimiento" class="control-label" id="lbDescEmprendimiento" style="display:none"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 text-center">
-                                <div class="form-group">
-                                    <textarea asp-for="DescEmprendimiento" class="form-control" rows="2" cols="20" id="txtDescEmprendimiento" style="display:none"></textarea>
-                                    <span asp-validation-for="DescEmprendimiento" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div class="form-group">
-                                    <br />
-                                    <input type="submit" value="Terminar" class="btn btn-primary" />
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
         </div>
     </div>
 </header>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function VistaPrevia(foto) {
+            if (foto.files && foto.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgFoto').attr('src', e.target.result);
+                    var data = e.target.result.split('base64,')[1];
+                    $('#Foto').attr('value', data);
+                }
+                reader.readAsDataURL(foto.files[0]);
+            }
+        }
+
         $(document).ready(function () {
             $('#cmbTipoRolId').on('change', function () {
                 var select = $(this).val();
                 if (select == '2') {
-                    $('#lbEmprendimiento').css('display', 'block');
-                    $('#txtEmprendimiento').css('display', 'block');
-                    $('#lbDescEmprendimiento').css('display', 'block');
-                    $('#txtDescEmprendimiento').css('display', 'block');
+                    $('.Emprendimiento').css('display', '');
                 }
                 else {
-                    $('#lbEmprendimiento').css('display', 'none');
-                    $('#txtEmprendimiento').css('display', 'none');
-                    $('#lbDescEmprendimiento').css('display', 'none');
-                    $('#txtDescEmprendimiento').css('display', 'none');
+                    $('.Emprendimiento').css('display', 'none');
                 }
+            });
+
+            //Llamar a la funcion cuando se selecciona una foto
+            $('#FileFoto').change(function () {
+                VistaPrevia(this);
             });
         })
     </script>

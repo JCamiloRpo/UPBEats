@@ -14,7 +14,7 @@
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(model => model.Nombre)</h6>
                         <div class="dropdown no-arrow">
-                            @if (UPBEats.Controllers.HomeController.getUsuarioTipoRolId == 2)//Opciones para el vendedor
+                            @if (UPBEats.Controllers.HomeController.getUsuario.TipoRolId == 2)//Opciones para el vendedor
                             {
                                 <a class="btn btn-secondary btn-circle" asp-action="Edit" asp-route-id="@Model.Id">
                                     <i class="fas fa-edit"></i>
@@ -27,7 +27,7 @@
                             {
                                 <form asp-controller="ProductoFavoritos" asp-action="Favorito">
                                     <input type="hidden" value="@Model.Id" name="ProductoId" />
-                                    <input type="hidden" value="@UPBEats.Controllers.HomeController.getIdUsuario" name="UsuarioId" />
+                                    <input type="hidden" value="@UPBEats.Controllers.HomeController.getUsuario.Id" name="UsuarioId" />
                                     <button class="btn btn-sm" id="btnFavorito" type="submit" href="#">
                                         @if (Convert.ToBoolean(ViewData["Favorito"]))
                                         {

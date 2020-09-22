@@ -16,8 +16,8 @@
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h5 class="m-0 font-weight-bold text-primary">@Html.DisplayFor(modeItem => Model.NombreCompleto)</h5>
                         <div class="dropdown no-arrow">
-                            <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getIdUsuario,@Model.Id,true)">
-                                @if (UPBEats.Controllers.UsuariosController.IsVendedorFavorito(@UPBEats.Controllers.HomeController.getIdUsuario, Model.Id))
+                            <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id,@Model.Id,true)">
+                                @if (UPBEats.Controllers.UsuariosController.IsVendedorFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id, Model.Id))
                                 {
                                     <i class="fas fa-heart fa-2x text-primary" id="iconFavorito"></i>
                                 }
@@ -72,8 +72,8 @@
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <a class="m-0 font-weight-bold text-primary" asp-controller="Productos" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modeItem => item.Nombre)</a>
                                 <div class="dropdown no-arrow">
-                                    <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getIdUsuario,@item.Id, false)">
-                                        @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(@UPBEats.Controllers.HomeController.getIdUsuario, item.Id))
+                                    <button class="btn btn-sm" onclick="btnFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id,@item.Id, false)">
+                                        @if (UPBEats.Controllers.ProductosController.IsProductoFavorito(@UPBEats.Controllers.HomeController.getUsuario.Id, item.Id))
                                         {
                                             <i class="fas fa-heart fa-2x text-primary" id="iconFavorito-@item.Id"></i>
                                         }
